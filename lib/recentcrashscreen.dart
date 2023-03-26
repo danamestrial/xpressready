@@ -22,12 +22,7 @@ class RecentCrashScreenState extends State<RecentCrashScreen> {
   }
 
   void _getData() async {
-    print("cowabunga");
     _AccidentModel = (await ApiService().getUsers())!;
-    print(_AccidentModel![0].accidentDate);
-
-    // Simulate QUERY time for the real API call
-    Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
   }
 
   @override
@@ -69,7 +64,7 @@ class RecentCrashScreenState extends State<RecentCrashScreen> {
                   itemBuilder: (context, i) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: ListElement(data: data['result'][i]),
+                      child: ListElement(data: _AccidentModel![i]),
                     );
                   }
                 ),

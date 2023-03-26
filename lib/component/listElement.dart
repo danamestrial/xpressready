@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:xpressready/model/accident_model.dart';
 
 class ListElement extends StatefulWidget {
-  final Map<String, dynamic> data;
+  final Accident data;
 
   const ListElement({Key? key, required this.data}) : super(key: key);
 
@@ -13,8 +14,6 @@ class ListElementState extends State<ListElement> {
 
   @override
   Widget build(BuildContext context) {
-
-    Map<String, dynamic> real_data = widget.data;
 
     double baseWidth = MediaQuery.of(context).size.width;
 
@@ -32,7 +31,7 @@ class ListElementState extends State<ListElement> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${real_data['expw_step']} - ${real_data['accident_date']} : ${real_data['accident_time']}",
+              "${widget.data.expressWay} - ${widget.data.accidentDate} : ${widget.data.accidentTime}",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFAC5757)),
             ),
             Row(
@@ -41,7 +40,7 @@ class ListElementState extends State<ListElement> {
                 const SizedBox(width: 10,), //space between bullet and text
                 Expanded(
                   child: Text(
-                    real_data['cause'],
+                    widget.data.cause,
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFAC5757)),
                   ),
                 )
