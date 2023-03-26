@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:rishe/settingscreen.dart';
 //
-// import 'homescreen.dart';
+import 'homescreen.dart';
 // import "exchangescreen.dart";
 
 void main() => runApp(const MyApp());
