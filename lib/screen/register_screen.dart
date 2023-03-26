@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:xpressready/components/text_field.dart';
 import 'package:xpressready/components/sign_up_button.dart';
 import 'package:xpressready/components/square_tile_icon.dart';
+import 'package:xpressready/services/gauth_service.dart';
 
 // This screen is heavily inspired by Mitch Koko
 // https://github.com/mitchkoko/ModernLoginUI
@@ -174,9 +175,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // google + apple sign in buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       // google button
-                      SquareTile(imagePath: 'lib/images/google.png'),
+                      SquareTile(
+                        onTap: () => GAuthService().signInWithGoogle(),
+                        imagePath: 'lib/images/google.png',
+                      ),
                     ],
                   ),
 

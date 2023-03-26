@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xpressready/components/list_element.dart';
 import 'package:xpressready/model/accident_model.dart';
-import 'package:xpressready/service/api_service.dart';
+import 'package:xpressready/services/api_service.dart';
 
 class RecentCrashScreen extends StatefulWidget {
   const RecentCrashScreen({Key? key}) : super(key: key);
