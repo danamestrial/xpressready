@@ -80,7 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   // logo
                   const Icon(
-                    Icons.lock,
+                    Icons.minor_crash,
                     size: 50,
                   ),
 
@@ -140,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onTap: signUserIn,
                   ),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 60),
 
                   // or continue with
                   Padding(
@@ -181,10 +181,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onTap: () => GAuthService().signInWithGoogle(context),
                         imagePath: 'lib/images/google.png',
                       ),
+
+                      const SizedBox(width: 30,),
+
+                      SquareTile(
+                        onTap: () => GAuthService.signInAnonymous(context),
+                        imagePath: 'lib/images/icognito.webp',
+                      ),
                     ],
                   ),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 25),
 
                   // not a member? register now
                   Row(

@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // logo
                 const Icon(
-                  Icons.lock,
+                  Icons.minor_crash,
                   size: 100,
                 ),
 
@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: signUserIn,
                 ),
 
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
 
                 // or continue with
                 Padding(
@@ -169,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 50),
 
                 // google + apple sign in buttons
                 Row(

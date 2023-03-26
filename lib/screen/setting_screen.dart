@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:xpressready/components/setting_element.dart';
 import 'package:xpressready/services/gauth_service.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -89,6 +90,15 @@ class SettingScreenState extends State<SettingScreen> {
                   ],
                 ),
               ),
+
+              const MySettingElement(
+                header: "Profile",
+                subHeader: "user details, vehicle details",
+                icon: Icon(Icons.account_box_rounded, size: 70, color: Color(0xFFC55CF1),),),
+
+              const MySettingElement(
+                header: "Notify Accident",
+                icon: Icon(Icons.notifications, size: 70, color: Color(0xFFFF00C4),),),
 
               const Spacer(),
 
