@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'Components/listElement.dart';
-import 'Components/data.dart';
+import 'component/listElement.dart';
+import 'component/data.dart';
+import 'model/accident_model.dart';
+import 'service/api_service.dart';
 
 class RecentCrashScreen extends StatefulWidget {
   const RecentCrashScreen({Key? key}) : super(key: key);
@@ -10,6 +12,23 @@ class RecentCrashScreen extends StatefulWidget {
 }
 
 class RecentCrashScreenState extends State<RecentCrashScreen> {
+
+  late List<Accident>? _AccidentModel = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
+  void _getData() async {
+    print("cowabunga");
+    _AccidentModel = (await ApiService().getUsers())!;
+    print(_AccidentModel![0].accidentDate);
+
+    // Simulate QUERY time for the real API call
+    Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
