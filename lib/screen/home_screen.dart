@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'recentcrashscreen.dart';
+import 'package:xpressready/screen/setting_screen.dart';
+import 'recent_accident_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -23,7 +22,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _widgetOptions = <Widget>[
     const RecentCrashScreen(),
-    // const ExchangeScreen(),
+    const SettingScreen(),
     // const SettingScreen(),
   ];
 
