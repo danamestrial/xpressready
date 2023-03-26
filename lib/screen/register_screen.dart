@@ -178,7 +178,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     children: [
                       // google button
                       SquareTile(
-                        onTap: () => GAuthService().signInWithGoogle(),
+                        onTap: () => GAuthService().signInWithGoogle(context),
                         imagePath: 'lib/images/google.png',
                       ),
                     ],

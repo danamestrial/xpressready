@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:xpressready/screen/auth_screen.dart';
 import 'screen/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'services/gauth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/', // we can omit this (as it is by default anyway)
       routes: {
-        '/': (context) => const HomeScreen(),
+        '/': (context) => const AuthScreen(),
       },
     );
   }
