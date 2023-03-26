@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xpressready/screen/auth_screen.dart';
 import 'login_screen.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -11,7 +12,7 @@ class SettingScreen extends StatefulWidget {
 class SettingScreenState extends State<SettingScreen> {
 
   void signUserIn() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => AuthScreen()));
   }
 
   @override

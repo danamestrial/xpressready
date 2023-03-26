@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "79689836896",
+    "project_id": "xpressready",
+    "storage_bucket": "xpressready.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79689836896:android:68027435f2f1d176421605",
+        "android_client_info": {
+          "package_name": "com.example.xpressready"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "79689836896-ffuon2qmrg2j68k74qm17enoccn65odc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB1ggWC5BDnXPXo8ETeL5DzQVA87fbuYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79689836896-ffuon2qmrg2j68k74qm17enoccn65odc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "79689836896-n0at0ckd79n2so8b6hcllvf6qf4qdemo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.xpressready"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
