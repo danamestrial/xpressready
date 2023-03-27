@@ -15,7 +15,6 @@ class GAuthService {
         }
     );
 
-    try {
       // Pop up interaction sign in process with google
       final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
@@ -28,10 +27,11 @@ class GAuthService {
         idToken: gAuth.idToken,
       );
 
+    try {
       // signs in
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
-      print("Boom");
+      print("Boom ${e}");
     } finally {
       Navigator.pop(context);
     }
