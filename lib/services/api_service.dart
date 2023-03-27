@@ -17,22 +17,36 @@ class ApiService {
     try {
       print("Finding from Cache");
       final SharedPreferences prefs = await _prefs;
-      // final String? lastUpdate = prefs.getString('date');
+      // await prefs.clear();
+      final String? lastUpdate = prefs.getString('date');
       final String? action = prefs.getString('accident_state');
-      // final String? action = null;
       if (action == null) {
         print('cache miss');
         var url = Uri.parse(ApiConstants.baseUrl);
         var response = await http.get(url, headers: {"accept": "application/json"});
         await prefs.setString('accident_state', utf8.decode(response.bodyBytes));
+        await prefs.setString('date', DateTime.now().toString());
         if (response.statusCode == 200) {
           List<Accident> _model = accidentsFromJson(utf8.decode(response.bodyBytes));
           return _model;
         }
       } else {
         print('cache hit');
-        List<Accident> _model = accidentsFromJson(action);
-        return _model;
+        DateTime lastDate = DateTime.parse(lastUpdate!);
+        if (DateTime.now().difference(lastDate).inMinutes > 30) {
+          print('outdated date - updating');
+          var url = Uri.parse(ApiConstants.baseUrl);
+          var response = await http.get(url, headers: {"accept": "application/json"});
+          await prefs.setString('accident_state', utf8.decode(response.bodyBytes));
+          await prefs.setString('date', DateTime.now().toString());
+          if (response.statusCode == 200) {
+            List<Accident> _model = accidentsFromJson(utf8.decode(response.bodyBytes));
+            return _model;
+          }
+        } else {
+          List<Accident> _model = accidentsFromJson(action);
+          return _model;
+        }
       }
 
     } catch (e) {
