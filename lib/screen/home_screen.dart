@@ -43,8 +43,8 @@ class HomeScreenState extends State<HomeScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.currency_exchange),
-            label: 'Rates',
+            icon: Icon(Icons.map_outlined),
+            label: 'Services',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
