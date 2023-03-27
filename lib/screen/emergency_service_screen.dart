@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xpressready/components/list_element.dart';
+import 'package:xpressready/components/service_button.dart';
 import 'package:xpressready/model/accident_model.dart';
 import 'package:xpressready/services/api_service.dart';
 
@@ -44,6 +45,31 @@ class EmergencyServiceScreenState extends State<EmergencyServiceScreen> {
                   ),
                 ),
               ),
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  children: [
+                    ServiceButton(
+                        onTap: (){print('cowabunga');}, text: 'Automation Service',
+                    ),
+                    ServiceButton(
+                        onTap: (){}, text: 'Nearest Gas Station',
+                    ),
+                    ServiceButton(
+                      onTap: (){}, text: 'Nearest Police Station',
+                    ),
+                    ServiceButton(
+                      onTap: (){}, text: 'Nearest Hospital',
+                    ),
+                    ServiceButton(
+                      onTap: (){}, text: 'Nearest Gas Station',
+                    ),
+                    ServiceButton(
+                      onTap: (){}, text: 'Nearest Gas Station',
+                    ),
+                  ],
+                ),
+              )
             ],
           )
       ),
