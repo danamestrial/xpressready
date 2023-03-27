@@ -12,25 +12,8 @@ class EmergencyServiceScreen extends StatefulWidget {
 }
 
 class EmergencyServiceScreenState extends State<EmergencyServiceScreen> {
-  Future<List<Accident>>? _accidentModel;
-
-  @override
-  void initState() {
-    super.initState();
-    _accidentModel = _getData();
-  }
-
-  Future<List<Accident>> _getData() async {
-    List<Accident> accidentModel = (await ApiService().getUsers())!;
-    return accidentModel;
-  }
-
   @override
   Widget build(BuildContext context) {
-
-    double baseWidth = MediaQuery.of(context).size.width;
-    double baseHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       backgroundColor: const Color(0xFFFBF2CF),
       body: SafeArea(
