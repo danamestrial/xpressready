@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xpressready/components/list_element.dart';
 import 'package:xpressready/model/accident_model.dart';
 import 'package:xpressready/services/api_service.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class RecentCrashScreen extends StatefulWidget {
   const RecentCrashScreen({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class RecentCrashScreen extends StatefulWidget {
 }
 
 class RecentCrashScreenState extends State<RecentCrashScreen> {
-  Future<List<Accident>>? _accidentModel;
+  Future<List<Accident>?>? _accidentModel;
 
   @override
   void initState() {
@@ -19,9 +20,8 @@ class RecentCrashScreenState extends State<RecentCrashScreen> {
     _accidentModel = _getData();
   }
 
-  Future<List<Accident>> _getData() async {
-    List<Accident> accidentModel = (await ApiService().getUsers())!;
-    return accidentModel;
+  Future<List<Accident>?> _getData() async {
+    return ApiService().getUsers();
   }
 
   @override
@@ -72,7 +72,11 @@ class RecentCrashScreenState extends State<RecentCrashScreen> {
                         }
                       );
                     } else {
-                      return const CircularProgressIndicator();
+                      return Center(
+                          child: LoadingAnimationWidget.inkDrop(
+                        size: 40, color: Colors.white,
+                        ),
+                      );
                     }
                   },
                 )

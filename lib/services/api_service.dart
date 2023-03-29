@@ -33,6 +33,9 @@ class ApiService {
       } else {
         print('cache hit');
         DateTime lastDate = DateTime.parse(lastUpdate!);
+
+        await Future.delayed(const Duration(seconds: 5)).then((value) => {});
+
         if (DateTime.now().difference(lastDate).inMinutes > 30) {
           print('outdated date - updating');
           var url = Uri.parse(ApiConstants.baseUrl);
