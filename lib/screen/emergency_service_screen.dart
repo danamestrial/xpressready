@@ -33,7 +33,7 @@ class EmergencyServiceScreenState extends State<EmergencyServiceScreen> {
                   crossAxisCount: 2,
                   children: [
                     ServiceButton(
-                        onTap: (){print('cowabunga');}, text: 'Automation Service',
+                        onTap: (){print('cowabunga');}, text: 'Hit and NOT run service',
                     ),
                     ServiceButton(
                         onTap: (){}, text: 'Nearest Gas Station',
