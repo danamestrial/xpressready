@@ -43,6 +43,12 @@ dependencies:
   google_sign_in: ^6.0.2
   loading_animation_widget: ^1.2.0+4
   dropdown_button2: ^2.0.0
+  google_maps: ^6.2.0
+  google_maps_flutter: ^2.2.5
+  dio: ^5.1.1
+  flutter_polyline_points: ^1.0.0
+  easy_debounce: ^2.0.3
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:

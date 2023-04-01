@@ -17,7 +17,7 @@ class ApiService {
     try {
       print("Finding from Cache");
       final SharedPreferences prefs = await _prefs;
-      await prefs.clear();
+      // await prefs.clear();
       final String? lastUpdate = prefs.getString('date');
       final String? action = prefs.getString('accident_state');
       if (action == null) {
