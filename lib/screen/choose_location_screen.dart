@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:xpressready/model/my_position_model.dart';
 import 'package:xpressready/model/prediction_model.dart';
+import 'package:xpressready/screen/map_screen.dart';
 import 'package:xpressready/services/location_service.dart';
 import 'package:xpressready/services/map_service.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -16,8 +19,11 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
 
   final locationSearchFieldController = TextEditingController();
+  late Future<String?> currentAddress = getLocation();
+  late Future<Position> currentPosition = LocationService.determinePosition();
+  MyPosition? destination;
+  String? destinationAddress;
   late List<Prediction> predictions = [];
-  late Future<Position> pos;
 
   Future<void> getPredictions(String message) async {
     String? response;
@@ -29,10 +35,24 @@ class _LocationScreenState extends State<LocationScreen> {
     }
   }
 
+  void saveDest(MyPosition latLng, String address) {
+    setState(() {
+      destination = latLng;
+      destinationAddress = address;
+    });
+  }
+
   Future<String?> getLocation() async {
-    pos = LocationService.determinePosition();
-    return GoogleMapService.getLocationFromLatLng(await pos);
+    return GoogleMapService.getLocationFromLatLng(await currentPosition);
     // Future.delayed(Duration(seconds: 3));
+  }
+
+  Future<String> getAddress(MyPosition position) async {
+    //this will list down all address around the position
+    List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark address = placemarks[0]; // get only first and closest address
+    String addressStr = [address.street,address.subLocality, address.locality, address.subAdministrativeArea, address.administrativeArea, address.country].where((element) => element!.isNotEmpty).join(",");
+    return addressStr;
   }
 
   @override
@@ -61,16 +81,16 @@ class _LocationScreenState extends State<LocationScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Your Location", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xFFAC5757)),),
+                            const Text("Your Location", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Color(0xFFAC5757)),),
 
                             FutureBuilder(
-                              future: getLocation(),
+                              future: currentAddress,
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   return Text(
                                     snapshot.data!,
                                     style: const TextStyle(
-                                        fontSize: 23,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black,
                                         overflow: TextOverflow.ellipsis
@@ -90,7 +110,14 @@ class _LocationScreenState extends State<LocationScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 20,),
+                const SizedBox(height: 15,),
+
+                const SizedBox(
+                  width: double.infinity,
+                  child: Text("Destination", style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600, color: Color(0xFFAC5757)),),
+                ),
+
+                const SizedBox(height: 10,),
 
                 Container(
                   width: double.infinity,
@@ -108,10 +135,20 @@ class _LocationScreenState extends State<LocationScreen> {
                     ],
                   ),
                   child: TextField(
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Search Location',
-                      prefixIcon: Icon(Icons.pin_drop)
+                    controller: locationSearchFieldController,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Search Location',
+                        prefixIcon: const Icon(Icons.pin_drop),
+                        suffixIcon: IconButton(
+                          onPressed: (){
+                            locationSearchFieldController.clear;
+                            setState(() {
+                              predictions = [];
+                            });
+                          },
+                          icon: const Icon(Icons.clear),
+                        ),
                     ),
                     onChanged: (text) {
                       setState(() {
@@ -125,15 +162,56 @@ class _LocationScreenState extends State<LocationScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 30,),
+                const SizedBox(height: 20,),
 
                 ListView.builder(
                   physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: predictions.length,
+                  itemCount: predictions.length + 1,
                   itemBuilder: (context, i) {
+                    if (i == 0) {
+                      return FutureBuilder(
+                        future: currentPosition,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context, MaterialPageRoute(
+                                    builder: (context) => MapScreen(position: snapshot.data!, saveDes: saveDest,)));
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 30),
+                                width: double.infinity,
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.my_location, size: 30,),
+                                    Flexible(
+                                      child: Text(
+                                        "  Choose from map",
+                                        overflow: TextOverflow.fade,
+                                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: Colors.black),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          } else {
+                            return LoadingAnimationWidget.prograssiveDots(
+                                color: Colors.black, size: 30
+                            );
+                          }
+                        },
+                      );
+                    }
                     return InkWell(
-                      // onTap: ,
+                      onTap: () async {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        destination = await GoogleMapService.getLatLngFromPlaceId(predictions[i-1].placeId);
+                        destinationAddress = await getAddress(destination!);
+                        setState(() {});
+                      },
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 30),
                         width: double.infinity,
@@ -142,9 +220,9 @@ class _LocationScreenState extends State<LocationScreen> {
                             const Icon(Icons.location_on, size: 30,),
                             Flexible(
                               child: Text(
-                                predictions[i].description,
+                                predictions[i-1].description,
                                 overflow: TextOverflow.fade,
-                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300, color: Colors.black),
+                                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w300, color: Colors.black),
                               ),
                             )
                           ],
@@ -153,11 +231,42 @@ class _LocationScreenState extends State<LocationScreen> {
                     );
                   }
                 ),
+
+                const Divider(thickness: 2,),
+
+                Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text("Destination", style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800, color: Color(0xFFAC5757)),),
+
+                      if (destinationAddress != null)
+                      Text(
+                        destinationAddress!,
+                        style: const TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black,
+                            overflow: TextOverflow.fade
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
         )
-      )
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async{
+
+        },
+        backgroundColor: Colors.green,
+        label: const Text('Confirm Location', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+        icon: const Icon(Icons.check, size: 30,),
+      ),
     );
   }
 }

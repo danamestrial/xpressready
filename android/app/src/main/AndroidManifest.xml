@@ -7,6 +7,8 @@
         android:label="xpressready"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+       <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyA-6b_ZFqCB8aIJMQVH2waVJF8olm0IBdo"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

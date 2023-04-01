@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:xpressready/model/my_position_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,6 +49,32 @@ class GoogleMapService {
       print("api called");
       if (response.statusCode == 200) {
         return json.decode(response.body)['results'][0]['formatted_address'];
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    return null;
+  }
+
+  static Future<MyPosition?> getLatLngFromPlaceId(String placeId) async {
+    Uri uri = Uri.https(
+        "maps.googleapis.com",
+        "/maps/api/place/details/json",
+        {
+          "place_id" : placeId,
+          "key" : API_KEY
+        }
+    );
+
+    try {
+      final response = await http.get(uri);
+      print("api called");
+      if (response.statusCode == 200) {
+        dynamic decoded = json.decode(response.body);
+        double lat = decoded['result']['geometry']['location']['lat'];
+        double lng = decoded['result']['geometry']['location']['lng'];
+        return MyPosition(latitude: lat, longitude: lng);
       }
     } catch (e) {
       debugPrint(e.toString());

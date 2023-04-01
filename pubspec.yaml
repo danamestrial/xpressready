@@ -51,6 +51,7 @@ dependencies:
   geolocator: ^9.0.2
   html: ^0.15.2
   string_validator: ^1.0.0
+  geocoding: ^2.1.0
 
 dev_dependencies:
   flutter_test:
