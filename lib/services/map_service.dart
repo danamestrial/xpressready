@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:html/dom.dart';
+import 'package:html/parser.dart';
 import 'package:xpressready/model/my_position_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:xpressready/.env.dart';
 import 'package:xpressready/model/step_model.dart';
-
+import 'package:xpressready/singleton/StoreManager.dart';
+import 'package:string_validator/string_validator.dart';
 
 class GoogleMapService {
 
@@ -71,7 +74,6 @@ class GoogleMapService {
       final response = await http.get(uri);
       print("api called");
       if (response.statusCode == 200) {
-        print("passed");
         return response.body;
       }
     } catch (e) {
@@ -81,9 +83,23 @@ class GoogleMapService {
     return null;
   }
 
-  static String? getExpressWays(List<StepMap> steps) {
-    for(StepMap step in steps) {
+  static Future<List<String>> getExpressWays(List<StepMap> steps) async {
+    StoreManager storeManagerInstance = StoreManager();
+    List<String>? expressWayList = await storeManagerInstance.expressWayList;
 
-    }
+    List<String> elementList = steps
+      .where((step) => step.html_instructions.contains("Toll"))
+      .map((step) {
+        final htmlDoc = parse(step.html_instructions);
+        return htmlDoc.getElementsByTagName("b")
+            .map((node) => ltrim(node.text, 'ทางพิเศษ'))
+            .where((text) => expressWayList!.contains(text))
+            .toList();
+      })
+      .expand((list) => list)
+      .toList();
+
+    print(elementList);
+    return elementList;
   }
 }

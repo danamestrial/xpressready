@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:xpressready/components/list_element.dart';
 import 'package:xpressready/model/accident_model.dart';
-import 'package:xpressready/services/api_service.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:xpressready/singleton/StoreManager.dart';
 
 class RecentCrashScreen extends StatefulWidget {
   const RecentCrashScreen({Key? key}) : super(key: key);
@@ -13,6 +13,7 @@ class RecentCrashScreen extends StatefulWidget {
 }
 
 class RecentCrashScreenState extends State<RecentCrashScreen> {
+  StoreManager storeManagerInstance = StoreManager();
   Future<List<Accident>?>? _accidentModel;
   String? selectedValue;
   Future<List<String>>? _expressWay;
@@ -27,21 +28,13 @@ class RecentCrashScreenState extends State<RecentCrashScreen> {
   @override
   void initState() {
     super.initState();
-    _accidentModel = _getData();
-    _expressWay = getExpressWay();
+    _accidentModel = storeManagerInstance.accidentList;
+    _expressWay = storeManagerInstance.expressWayList;
   }
 
-  Future<List<Accident>?> _getData() async {
-    return ApiService().getUsers();
-  }
-
-  Future<List<String>> getExpressWay() async {
-    Set<String> set = {};
-    for (var accident in (await _accidentModel!)!) {
-      set.add(accident.expressWay);
-    }
-    return set.toList();
-  }
+  // Future<List<Accident>?> _getData() async {
+  //   return ApiService().getUsers();
+  // }
 
   @override
   Widget build(BuildContext context) {

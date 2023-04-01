@@ -19,9 +19,9 @@ class _TestScreenState extends State<TestScreen> {
     String? res =await GoogleMapService.getStepsFromLatLng(
         const MyPosition(latitude: 13.801412, longitude: 100.322513),
         const MyPosition(latitude: 13.802174, longitude: 100.615555));
-    print(res);
+    // print(res);
     _stepList = stepsFromJson(res);
-    print(_stepList);
+    // print(_stepList);
   }
 
   @override
@@ -30,8 +30,9 @@ class _TestScreenState extends State<TestScreen> {
       body: SafeArea(
         child: Container(
           child: TextButton(
-            onPressed: (){
-              getListSteps();
+            onPressed: () async {
+              await getListSteps();
+              GoogleMapService.getExpressWays(_stepList);
             },
             child: Text("Press Me", style: TextStyle(fontSize: 40),),
           ),
