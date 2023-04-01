@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:xpressready/model/prediction_model.dart';
+import 'package:xpressready/services/location_service.dart';
 import 'package:xpressready/services/map_service.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:geolocator/geolocator.dart';
@@ -15,6 +17,7 @@ class _LocationScreenState extends State<LocationScreen> {
 
   final locationSearchFieldController = TextEditingController();
   late List<Prediction> predictions = [];
+  late Future<Position> pos;
 
   Future<void> getPredictions(String message) async {
     String? response;
@@ -24,6 +27,17 @@ class _LocationScreenState extends State<LocationScreen> {
         predictions = predictionsFromJson(response!);
       });
     }
+  }
+
+  Future<String?> getLocation() async {
+    pos = LocationService.determinePosition();
+    return GoogleMapService.getLocationFromLatLng(await pos);
+    // Future.delayed(Duration(seconds: 3));
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -42,12 +56,35 @@ class _LocationScreenState extends State<LocationScreen> {
                   child: Row(
                     children: [
                       const Icon(Icons.arrow_back_ios, size: 40,),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text("Your Location", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xFFAC5757)),),
-                          Text("Mahidol University", style: TextStyle(fontSize: 23, fontWeight: FontWeight.w800, color: Colors.black),)
-                        ],
+
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Your Location", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xFFAC5757)),),
+
+                            FutureBuilder(
+                              future: getLocation(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(
+                                    snapshot.data!,
+                                    style: const TextStyle(
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.black,
+                                        overflow: TextOverflow.ellipsis
+                                    ),
+                                  );
+                                } else {
+                                  return LoadingAnimationWidget.prograssiveDots(
+                                      color: Colors.black, size: 30
+                                  );
+                                }
+                              },
+                            )
+                          ],
+                        ),
                       )
                     ],
                   ),
