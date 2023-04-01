@@ -16,8 +16,7 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
   final _textController1 = TextEditingController();
   final _textController2 = TextEditingController();
   final _textController3 = TextEditingController();
-  List<List<dynamic>> _formData = [];
-  final List<String> choice = ['Hit Someone', 'Being Hit'];
+  final List<String> items = ['Hit Someone', 'Being Hit'];
   String? hit;
   String? name;
   String? plate;
@@ -45,11 +44,26 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
     _textController3.clear();
   }
 
-  // @override
-  // void initState() {
-  //   _savedContacts();
-  //   super.initState();
-  // }
+  void _loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> dataAsString = prefs.getStringList("data") ?? [];
+    setState(() {
+      _list = dataAsString.map((string) => string.split(",")).toList();
+    });
+  }
+
+  void _saveData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> dataAsString = _list.map((list) => list.join(",")).toList();
+    prefs.setStringList("data", dataAsString);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+    _saveData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,75 +72,119 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            Container(
+              child: Row(
+                children: [
+                  Container(
+                      margin: const EdgeInsets.only(top: 20, bottom: 10),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(
+                          Icons.arrow_back,
+                          size: 45,
+                          color: Color(0xFFAC5757),
+                        ),
+                      )),
+                  Container(
+                    margin: const EdgeInsets.only(top: 20, bottom: 10),
+                    child: const Text(
+                      "Hit and Not Run Contacts",
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFFAC5757)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Expanded(
               child: ListView.builder(
                 itemCount: _list.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
-                    height: 140,
+                    height: 165,
                     padding: const EdgeInsets.only(top: 11, left: 12),
-                    margin: const EdgeInsets.only(top: 15),
-                    color: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          blurRadius: 9.0,
+                          spreadRadius: 1.0,
+                          offset: Offset(
+                            5.0,
+                            5.0,
+                          ),
+                        )
+                      ],
+                    ),
+                    child: Row(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          child: Text(
-                            "Hit Someone or Being Hit: ${_list[index][1]}",
-                            style: const TextStyle(
-                                fontSize: 20,
-                                color: Color(0xFFAC5757),
-                                fontWeight: FontWeight.w700),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        Container(
-                          child: Text(
-                            "Name: ${_list[index][0]}",
-                            style: const TextStyle(
-                                fontSize: 20,
-                                color: Color(0xFFAC5757),
-                                fontWeight: FontWeight.w700),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        Container(
-                          child: Text(
-                            "Car Plate: ${_list[index][2]}",
-                            style: const TextStyle(
-                                fontSize: 20,
-                                color: Color(0xFFAC5757),
-                                fontWeight: FontWeight.w700),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        Container(
-                          child: Row(
-                            children: [
-                              Container(
-                                // padding: EdgeInsets.only(top: 10),
-                                child: Text(
-                                  "Contact Number: ${_list[index][3]}",
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      color: Color(0xFFAC5757),
-                                      fontWeight: FontWeight.w700),
-                                ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                _list[index][1],
+                                style: const TextStyle(
+                                    fontSize: 22,
+                                    color: Color(0xFFAC5757),
+                                    fontWeight: FontWeight.w900),
+                                textAlign: TextAlign.left,
                               ),
-                              Container(
-                                margin: EdgeInsets.only(left: 20),
-                                  child: FloatingActionButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _list.removeAt(index);
-                                  });
-                                },
-                                backgroundColor: Colors.red,
-                                child: const Icon(Icons.delete),
-                              )),
-                            ],
-                          ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Text(
+                                "Name: ${_list[index][0]}",
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Color(0xFFAC5757),
+                                    fontWeight: FontWeight.w700),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Text(
+                                "Car Plate: ${_list[index][2]}",
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Color(0xFFAC5757),
+                                    fontWeight: FontWeight.w700),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Text(
+                                "Contact Number: ${_list[index][3]}",
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Color(0xFFAC5757),
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ],
                         ),
+                        Container(
+                            margin: const EdgeInsets.only(left: 23),
+                            child: FloatingActionButton(
+                              onPressed: () {
+                                setState(() {
+                                  _list.removeAt(index);
+                                  _saveData();
+                                });
+                              },
+                              backgroundColor: Colors.red,
+                              child: const Icon(Icons.delete),
+                            )),
                       ],
                     ),
                   );
@@ -164,43 +222,41 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                                   fontWeight: FontWeight.w800),
                             ),
                           ),
-                          Container(
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton2(
-                                hint: const Text(
-                                  'Select Item',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Color(0xFFAC5757),
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                items: choice
-                                    .map(
-                                      (e) => DropdownMenuItem<String>(
-                                        value: e,
-                                        child: Text(
-                                          e,
-                                          style: const TextStyle(
-                                              fontSize: 15,
-                                              color: Color(0xFFAC5757),
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                                value: hit,
-                                onChanged: (value) {
-                                  setState(() {
-                                    hit = value as String;
-                                  });
-                                },
-                                buttonStyleData: const ButtonStyleData(
-                                  height: 40,
-                                  width: 140,
-                                ),
-                                menuItemStyleData:
-                                    const MenuItemStyleData(height: 40),
+                          DropdownButtonHideUnderline(
+                            child: DropdownButton2(
+                              hint: const Text(
+                                'Select Item',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xFFAC5757),
+                                    fontWeight: FontWeight.w700),
                               ),
+                              items: items
+                                  .map(
+                                    (item) => DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(
+                                        item,
+                                        style: const TextStyle(
+                                            fontSize: 15,
+                                            color: Color(0xFFAC5757),
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                              value: hit,
+                              onChanged: (value) {
+                                setState(() {
+                                  hit = value as String;
+                                });
+                              },
+                              buttonStyleData: const ButtonStyleData(
+                                height: 40,
+                                width: 140,
+                              ),
+                              menuItemStyleData:
+                                  const MenuItemStyleData(height: 40),
                             ),
                           ),
                           Container(
@@ -264,7 +320,6 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                               },
                             ),
                           ),
-                          Container(),
                           Container(
                             padding: const EdgeInsets.only(top: 16),
                             child: const Text(
@@ -279,6 +334,7 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                             padding: const EdgeInsets.only(top: 8),
                             child: TextFormField(
                               controller: _textController3,
+                              maxLength: 10,
                               decoration: const InputDecoration(
                                 labelText: 'Enter Contact Number',
                                 hintText: 'Enter contact number here',
@@ -304,13 +360,10 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                                 foregroundColor: Colors.white,
                               ),
                               onPressed: () {
-                                print(name);
-                                print(hit);
-                                print(plate);
-                                print(number);
                                 setState(() {
                                   _addContact();
                                 });
+                                _saveData();
                                 // if (_formKey.currentState!.validate()) {
                                 //   _formKey.currentState!.save();
                                 // }
@@ -330,9 +383,10 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                 );
               });
         },
-        backgroundColor: Colors.lightGreen,
+        backgroundColor: Colors.grey,
         child: const Icon(Icons.add),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
