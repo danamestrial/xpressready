@@ -202,7 +202,7 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                 return SingleChildScrollView(
                   child: AlertDialog(
                     backgroundColor: const Color(0xFFFBF2CF),
-                    title: const Text('Enter form data',
+                    title: const Text('Enter Contact Details',
                         style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
@@ -222,41 +222,43 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                                   fontWeight: FontWeight.w800),
                             ),
                           ),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton2(
-                              hint: const Text(
-                                'Select Item',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Color(0xFFAC5757),
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              items: items
-                                  .map(
-                                    (item) => DropdownMenuItem<String>(
-                                      value: item,
-                                      child: Text(
-                                        item,
-                                        style: const TextStyle(
-                                            fontSize: 15,
-                                            color: Color(0xFFAC5757),
-                                            fontWeight: FontWeight.w700),
+                          Container(
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2(
+                                hint: const Text(
+                                  'Select Item',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Color(0xFFAC5757),
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                items: items
+                                    .map(
+                                      (item) => DropdownMenuItem<String>(
+                                        value: item,
+                                        child: Text(
+                                          item,
+                                          style: const TextStyle(
+                                              fontSize: 15,
+                                              color: Color(0xFFAC5757),
+                                              fontWeight: FontWeight.w700),
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                  .toList(),
-                              value: hit,
-                              onChanged: (value) {
-                                setState(() {
-                                  hit = value as String;
-                                });
-                              },
-                              buttonStyleData: const ButtonStyleData(
-                                height: 40,
-                                width: 140,
+                                    )
+                                    .toList(),
+                                value: hit,
+                                onChanged: (value) {
+                                  setState(() {
+                                    hit = value as String;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  height: 40,
+                                  width: 140,
+                                ),
+                                menuItemStyleData:
+                                    const MenuItemStyleData(height: 40),
                               ),
-                              menuItemStyleData:
-                                  const MenuItemStyleData(height: 40),
                             ),
                           ),
                           Container(
@@ -352,29 +354,51 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                               },
                             ),
                           ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                backgroundColor: const Color(0xFFAC5757),
-                                foregroundColor: Colors.white,
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 14, top: 20, right: 10),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: const Color(0xFFAC5757),
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _addContact();
+                                    });
+                                    _saveData();
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    'SAVE',
+                                    style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _addContact();
-                                });
-                                _saveData();
-                                // if (_formKey.currentState!.validate()) {
-                                //   _formKey.currentState!.save();
-                                // }
-                                Navigator.pop(context);
-                              },
-                              child: const Text(
-                                'SAVE',
-                                style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.bold),
+                              Container(
+                                margin:
+                                    const EdgeInsets.only(top: 20, left: 10),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.grey,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    'CANCEL',
+                                    style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),

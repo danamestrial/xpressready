@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EmergencyContactScreen extends StatefulWidget {
   const EmergencyContactScreen({Key? key}) : super(key: key);
@@ -8,6 +9,50 @@ class EmergencyContactScreen extends StatefulWidget {
 }
 
 class EmergencyContactScreenState extends State<EmergencyContactScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _textController1 = TextEditingController();
+  final _textController2 = TextEditingController();
+  String? name;
+  String? number;
+  List<List<String>> _list = [];
+
+  @override
+  void dispose() {
+    _textController1.dispose();
+    _textController2.dispose();
+    super.dispose();
+  }
+
+  void _addContact() {
+    _list.add([
+      _textController1.text,
+      _textController2.text,
+    ]);
+    _textController1.clear();
+    _textController2.clear();
+  }
+
+  void _loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> dataAsString = prefs.getStringList("data") ?? [];
+    setState(() {
+      _list = dataAsString.map((string) => string.split(",")).toList();
+    });
+  }
+
+  void _saveData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> dataAsString = _list.map((list) => list.join(",")).toList();
+    prefs.setStringList("data", dataAsString);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+    _saveData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +88,85 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                 ],
               ),
             ),
-            Container(),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _list.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    height: 120,
+                    padding: const EdgeInsets.only(left: 12),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          blurRadius: 9.0,
+                          spreadRadius: 1.0,
+                          offset: Offset(
+                            5.0,
+                            5.0,
+                          ),
+                        )
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: const Icon(
+                            Icons.phone_outlined,
+                            size: 45,
+                          ),
+                        ),
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(top: 30, left: 28),
+                                child: Text(
+                                  _list[index][0],
+                                  style: const TextStyle(
+                                      fontSize: 25,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(top: 5, left: 28, right: 65),
+                                child: Text(
+                                  _list[index][1],
+                                  style: const TextStyle(
+                                      fontSize: 25,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                            // margin: const EdgeInsets.only(),
+                            child: FloatingActionButton(
+                              onPressed: () {
+                                setState(() {
+                                  _list.removeAt(index);
+                                  _saveData();
+                                });
+                              },
+                              backgroundColor: Colors.red,
+                              child: const Icon(Icons.delete),
+
+                            ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
@@ -61,10 +184,127 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                             fontWeight: FontWeight.bold,
                             color: Color(0xFFAC5757)),
                         textAlign: TextAlign.center),
+                    content: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: const Text(
+                              'Name:',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Color(0xFFAC5757),
+                                  fontWeight: FontWeight.w800),
+                            ),
+                          ),
+                          Container(
+                            key: _formKey,
+                            padding: const EdgeInsets.only(top: 8),
+                            child: TextFormField(
+                              controller: _textController1,
+                              maxLength: 15,
+                              decoration: const InputDecoration(
+                                labelText: 'Enter Your Name',
+                                hintText: 'Enter your name here',
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your name';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  name = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: const Text(
+                              'Contact number',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Color(0xFFAC5757),
+                                  fontWeight: FontWeight.w800),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: TextFormField(
+                              controller: _textController2,
+                              maxLength: 10,
+                              decoration: const InputDecoration(
+                                labelText: 'Enter Contact Number',
+                                hintText: 'Enter contact number here',
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter contact number';
+                                }
+                                return value;
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  number = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 14, top: 20, right: 10),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: const Color(0xFFAC5757),
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _addContact();
+                                    });
+                                    _saveData();
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    'SAVE',
+                                    style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin:
+                                    const EdgeInsets.only(top: 20, left: 10),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.grey,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    'CANCEL',
+                                    style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 );
-              }
-          );
+              });
         },
         backgroundColor: Colors.grey,
         child: const Icon(Icons.add),
