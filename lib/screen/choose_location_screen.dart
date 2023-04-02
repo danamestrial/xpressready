@@ -9,6 +9,8 @@ import 'package:xpressready/services/map_service.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../model/step_model.dart';
+
 class LocationScreen extends StatefulWidget {
   const LocationScreen({super.key});
 
@@ -75,7 +77,12 @@ class _LocationScreenState extends State<LocationScreen> {
                 Center(
                   child: Row(
                     children: [
-                      const Icon(Icons.arrow_back_ios, size: 40,),
+                      InkWell(
+                        child: Icon(Icons.arrow_back_ios, size: 40,),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      ),
 
                       Expanded(
                         child: Column(
@@ -234,13 +241,13 @@ class _LocationScreenState extends State<LocationScreen> {
 
                 const Divider(thickness: 2,),
 
+                if (destinationAddress != null)
                 Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text("Destination", style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800, color: Color(0xFFAC5757)),),
 
-                      if (destinationAddress != null)
                       Text(
                         destinationAddress!,
                         style: const TextStyle(
@@ -261,7 +268,15 @@ class _LocationScreenState extends State<LocationScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async{
-
+          if(destination != null) {
+            Navigator.pop(context);
+            Position pos = await currentPosition;
+            MyPosition originPos = MyPosition(latitude: pos.latitude, longitude: pos.longitude);
+            String? stringSteps = await GoogleMapService.getStepsFromLatLng(originPos, destination!);
+            List<StepMap> stepList = stepsFromJson(stringSteps);
+            GoogleMapService.getExpressWays(stepList);
+            print("Success");
+          }
         },
         backgroundColor: Colors.green,
         label: const Text('Confirm Location', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
