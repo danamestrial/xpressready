@@ -14,7 +14,7 @@ class MySettingElement extends StatelessWidget {
     double baseWidth = MediaQuery.of(context).size.width;
 
     return InkWell(
-      onTap: () {print("object");},
+      onTap: onTap,
       child: Container(
         constraints: BoxConstraints(
           maxWidth: baseWidth*0.9

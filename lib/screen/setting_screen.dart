@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:xpressready/components/setting_element.dart';
+import 'package:xpressready/screen/login_register_switch.dart';
+import 'package:xpressready/screen/login_screen.dart';
 import 'package:xpressready/services/gauth_service.dart';
 import 'package:xpressready/screen/profile_screen.dart';
 
@@ -81,7 +83,7 @@ class SettingScreenState extends State<SettingScreen> {
                             Text(
                               user!.isAnonymous?"Guest" :
                                 user!.displayName==null?
-                                  user!.email as String : user!.displayName as String,
+                                  user!.email?.split('@')[0] as String : user!.displayName as String,
                               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -92,10 +94,29 @@ class SettingScreenState extends State<SettingScreen> {
                 ),
               ),
 
-              const MySettingElement(
+              MySettingElement(
                 header: "Profile",
                 subHeader: "user details, vehicle details",
-                icon: Icon(Icons.account_box_rounded, size: 70, color: Color(0xFFC55CF1),),),
+                icon: const Icon(Icons.account_box_rounded, size: 70, color: Color(0xFFC55CF1),),
+                onTap: () {
+                  if (user!.isAnonymous) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginRegisterScreen()
+                      ),
+                    );
+                  }
+                  else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProfileScreen()
+                      ),
+                    );
+                  }
+                },
+              ),
 
               const MySettingElement(
                 header: "Notify Accident",

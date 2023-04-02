@@ -21,10 +21,25 @@ class NearestServiceScreenState extends State<NearestServiceScreen> {
             children: [
               Container(
                 margin: const EdgeInsets.only(top: 40, bottom: 10),
-                child: const Center(
-                  child: Text(
-                    "Nearest Services",
-                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.w800, color: Color(0xFFAC5757)),
+                child: Center(
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 5),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(Icons.arrow_back, size: 45, color: Color(0xFFAC5757),),
+                        ),
+                      ),
+                      Container(
+                        child: const Text(
+                          "Nearest Services",
+                          style: TextStyle(fontSize: 35, fontWeight: FontWeight.w800, color: Color(0xFFAC5757)),
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),

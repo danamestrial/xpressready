@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 // username textfield
                 MyTextField(
                   controller: emailController,
-                  hintText: 'Username',
+                  hintText: 'Email',
                   obscureText: false,
                 ),
 

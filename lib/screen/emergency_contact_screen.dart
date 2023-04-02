@@ -10,39 +10,39 @@ class EmergencyContactScreen extends StatefulWidget {
 
 class EmergencyContactScreenState extends State<EmergencyContactScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _textController1 = TextEditingController();
-  final _textController2 = TextEditingController();
+  final _nameController = TextEditingController();
+  final _numberController = TextEditingController();
   String? name;
   String? number;
-  List<List<String>> _list = [];
+  List<List<String>> list_ = [];
 
   @override
   void dispose() {
-    _textController1.dispose();
-    _textController2.dispose();
+    _nameController.dispose();
+    _numberController.dispose();
     super.dispose();
   }
 
   void _addContact() {
-    _list.add([
-      _textController1.text,
-      _textController2.text,
+    list_.add([
+      _nameController.text,
+      _numberController.text,
     ]);
-    _textController1.clear();
-    _textController2.clear();
+    _nameController.clear();
+    _numberController.clear();
   }
 
   void _loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> dataAsString = prefs.getStringList("data") ?? [];
     setState(() {
-      _list = dataAsString.map((string) => string.split(",")).toList();
+      list_ = dataAsString.map((string) => string.split(",")).toList();
     });
   }
 
   void _saveData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> dataAsString = _list.map((list) => list.join(",")).toList();
+    List<String> dataAsString = list_.map((list) => list.join(",")).toList();
     prefs.setStringList("data", dataAsString);
   }
 
@@ -64,7 +64,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
               child: Row(
                 children: [
                   Container(
-                      margin: const EdgeInsets.only(top: 20, bottom: 10),
+                      margin: const EdgeInsets.only(top: 20, bottom: 10, left: 5),
                       child: TextButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -80,7 +80,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                     child: const Text(
                       "Emergency Contacts",
                       style: TextStyle(
-                          fontSize: 25,
+                          fontSize: 30,
                           fontWeight: FontWeight.w900,
                           color: Color(0xFFAC5757)),
                     ),
@@ -90,7 +90,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: _list.length,
+                itemCount: list_.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                     height: 120,
@@ -125,7 +125,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                               Container(
                                 padding: const EdgeInsets.only(top: 30, left: 28),
                                 child: Text(
-                                  _list[index][0],
+                                  list_[index][0],
                                   style: const TextStyle(
                                       fontSize: 25,
                                       color: Colors.black,
@@ -136,7 +136,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                               Container(
                                 padding: const EdgeInsets.only(top: 5, left: 28, right: 65),
                                 child: Text(
-                                  _list[index][1],
+                                  list_[index][1],
                                   style: const TextStyle(
                                       fontSize: 25,
                                       color: Colors.black,
@@ -152,7 +152,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                             child: FloatingActionButton(
                               onPressed: () {
                                 setState(() {
-                                  _list.removeAt(index);
+                                  list_.removeAt(index);
                                   _saveData();
                                 });
                               },
@@ -202,7 +202,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                             key: _formKey,
                             padding: const EdgeInsets.only(top: 8),
                             child: TextFormField(
-                              controller: _textController1,
+                              controller: _nameController,
                               maxLength: 15,
                               decoration: const InputDecoration(
                                 labelText: 'Enter Your Name',
@@ -234,7 +234,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                           Container(
                             padding: const EdgeInsets.only(top: 8),
                             child: TextFormField(
-                              controller: _textController2,
+                              controller: _numberController,
                               maxLength: 10,
                               decoration: const InputDecoration(
                                 labelText: 'Enter Contact Number',

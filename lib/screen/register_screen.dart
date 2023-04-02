@@ -25,6 +25,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final confirmPasswordController = TextEditingController();
 
+  final nameController = TextEditingController();
+
+  final phoneController = TextEditingController();
+
   String alert = "";
 
   // set state to alert message
@@ -51,6 +55,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
+        name: nameController;
+        phone: phoneController;
       } else {
         // Show error that password don't match
         setAlert('Password did not match');
@@ -107,10 +113,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   const SizedBox(height: 10),
 
+                  // full name textfield
+                  MyTextField(
+                    controller: nameController,
+                    hintText: 'Full Name',
+                    obscureText: false,
+                  ),
+
+                  const SizedBox(height: 10),
+
                   // username textfield
                   MyTextField(
                     controller: emailController,
-                    hintText: 'Username',
+                    hintText: 'Email',
+                    obscureText: false,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // phone number textfield
+                  MyTextField(
+                    controller: phoneController,
+                    hintText: 'Phone Number',
                     obscureText: false,
                   ),
 

@@ -16,12 +16,11 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
   final _textController1 = TextEditingController();
   final _textController2 = TextEditingController();
   final _textController3 = TextEditingController();
-  final List<String> items = ['Hit Someone', 'Being Hit'];
+  List<String> items = ['Hit Someone', 'Being Hit'];
   String? hit;
   String? name;
   String? plate;
   String? number;
-  late final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<List<String>> _list = [];
 
   @override
@@ -46,7 +45,7 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
 
   void _loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> dataAsString = prefs.getStringList("data") ?? [];
+    List<String> dataAsString = prefs.getStringList("data1") ?? [];
     setState(() {
       _list = dataAsString.map((string) => string.split(",")).toList();
     });
@@ -55,7 +54,7 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
   void _saveData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> dataAsString = _list.map((list) => list.join(",")).toList();
-    prefs.setStringList("data", dataAsString);
+    prefs.setStringList("data1", dataAsString);
   }
 
   @override
@@ -76,7 +75,7 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
               child: Row(
                 children: [
                   Container(
-                      margin: const EdgeInsets.only(top: 20, bottom: 10),
+                      margin: const EdgeInsets.only(top: 20, bottom: 10, left: 5),
                       child: TextButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -276,6 +275,7 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                             padding: const EdgeInsets.only(top: 8),
                             child: TextFormField(
                               controller: _textController1,
+                              maxLength: 15,
                               decoration: const InputDecoration(
                                 labelText: 'Enter Your Name',
                                 hintText: 'Enter your name here',
@@ -365,11 +365,11 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                                     foregroundColor: Colors.white,
                                   ),
                                   onPressed: () {
-                                    setState(() {
-                                      _addContact();
-                                    });
-                                    _saveData();
-                                    Navigator.pop(context);
+                                      setState(() {
+                                        _addContact();
+                                      });
+                                      _saveData();
+                                      Navigator.pop(context);
                                   },
                                   child: const Text(
                                     'SAVE',
