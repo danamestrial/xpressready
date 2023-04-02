@@ -52,7 +52,14 @@ class EmergencyServiceScreenState extends State<EmergencyServiceScreen> {
                         }, text: 'Emergency Contact Guardians',
                     ),
                     ServiceButton(
-                      onTap: (){}, text: 'Nearest Police Station',
+                      onTap: (){
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => const NearestPoliceStation()
+                        //   ),
+                        // );
+                      }, text: 'Nearest Police Station',
                     ),
                     ServiceButton(
                       onTap: (){}, text: 'Nearest Hospital',
@@ -71,5 +78,4 @@ class EmergencyServiceScreenState extends State<EmergencyServiceScreen> {
       ),
     );
   }
-
 }

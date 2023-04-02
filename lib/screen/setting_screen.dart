@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:xpressready/components/setting_element.dart';
 import 'package:xpressready/services/gauth_service.dart';
+import 'package:xpressready/screen/profile_screen.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
