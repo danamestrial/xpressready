@@ -44,11 +44,11 @@ class ProfileScreenState extends State<ProfileScreen> {
         .collection('users')
         .doc(user!.uid)
         .update({
-      "full_name" : _textController1,
-      "phone_number" : _textController2,
-      "license_plate" : _textController3,
-      "vehicle_brand" : _textController4,
-      "add_info" : _textController5,
+      "full_name" : _textController1.text,
+      "phone_number" : _textController2.text,
+      "license_plate" : _textController3.text,
+      "vehicle_brand" : _textController4.text,
+      "add_info" : _textController5.text,
     });
   }
 
@@ -94,7 +94,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     child: Text(
                       user!.isAnonymous
                           ? "Guest"
-                          : user!.displayName == ""
+                          : user!.displayName == "" || user!.displayName==null
                             ? user!.email?.split('@')[0] as String
                             : user!.displayName as String,
                       style:
@@ -442,7 +442,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                       backgroundColor: const Color(0xFFAC5757),
                                                       foregroundColor: Colors.white,
                                                     ),
-                                                    onPressed: () async {
+                                                    onPressed: () {
                                                       updateData().then((value) => Navigator.pop(context));
                                                       setState(() {
                                                       });

@@ -82,7 +82,7 @@ class SettingScreenState extends State<SettingScreen> {
                           children: [
                             Text(
                               user!.isAnonymous?"Guest" :
-                                user!.displayName==""?
+                                user!.displayName=="" || user!.displayName==null?
                                   user!.email?.split('@')[0] as String : user!.displayName as String,
                               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                             ),
