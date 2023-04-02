@@ -39,6 +39,19 @@ class ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  Future<dynamic> updateData() async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .update({
+      "full_name" : _textController1,
+      "phone_number" : _textController2,
+      "license_plate" : _textController3,
+      "vehicle_brand" : _textController4,
+      "add_info" : _textController5,
+    });
+  }
+
   void signUserIn() {
     if (user!.isAnonymous) {
       GAuthService.signOut();
@@ -429,11 +442,10 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                       backgroundColor: const Color(0xFFAC5757),
                                                       foregroundColor: Colors.white,
                                                     ),
-                                                    onPressed: () {
+                                                    onPressed: () async {
+                                                      updateData().then((value) => Navigator.pop(context));
                                                       setState(() {
-                                                        snapshot.data;
                                                       });
-                                                      Navigator.pop(context);
                                                     },
                                                     child: const Text(
                                                       'SAVE',
