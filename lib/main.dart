@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:xpressready/screen/auth_screen.dart';
-import 'package:xpressready/screen/choose_location_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:xpressready/screen/map_screen.dart';
-import 'package:xpressready/screen/test_logged_screen.dart';
+import 'package:xpressready/screen/forgot_password_screen.dart';
 import 'firebase_options.dart';
-import 'services/gauth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,10 +18,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/test', // we can omit this (as it is by default anyway)
+      initialRoute: '/', // we can omit this (as it is by default anyway)
       routes: {
         '/': (context) => const AuthScreen(),
-        '/test': (context) => const LocationScreen(),
+        '/test': (context) => ForgotPasswordScreen(),
       },
     );
   }

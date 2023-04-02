@@ -9,6 +9,9 @@ import 'package:xpressready/model/step_model.dart';
 import 'package:xpressready/singleton/StoreManager.dart';
 import 'package:string_validator/string_validator.dart';
 
+import '../model/place_model.dart';
+import 'location_service.dart';
+
 class GoogleMapService {
 
   static Future<String?> autoCompleteCall(String message) async {
@@ -99,6 +102,33 @@ class GoogleMapService {
       print("api called");
       if (response.statusCode == 200) {
         return response.body;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    return null;
+  }
+
+  static Future<List<Place>?> getNearByPlaceByType(String type) async {
+   Position currentPosition = await LocationService.determinePosition();
+    Uri uri = Uri.https(
+        "maps.googleapis.com",
+        "/maps/api/place/nearbysearch/json",
+        {
+          "location" : "${currentPosition.latitude},${currentPosition.longitude}",
+          "type" : type,
+          "rankby" : "distance",
+          "opennow":"",
+          "key" : API_KEY
+        }
+    );
+
+    try {
+      final response = await http.get(uri);
+      print("api called");
+      if (response.statusCode == 200) {
+        return getPlacesFromJson(response.body);
       }
     } catch (e) {
       debugPrint(e.toString());

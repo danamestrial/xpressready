@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xpressready/components/service_button.dart';
 import 'package:xpressready/screen/emergency_contact_screen.dart';
 import 'package:xpressready/screen/hit_and_not_run_screen.dart';
+import 'package:xpressready/screen/nearest_services_screen.dart';
 
 class EmergencyServiceScreen extends StatefulWidget {
   const EmergencyServiceScreen({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class EmergencyServiceScreenState extends State<EmergencyServiceScreen> {
           child: Column(
             children: [
               Container(
-                margin: const EdgeInsets.only(top: 40),
+                margin: const EdgeInsets.only(top: 40, bottom: 10),
                 child: const Center(
                   child: Text(
                     "Emergency Services",
@@ -29,7 +30,8 @@ class EmergencyServiceScreenState extends State<EmergencyServiceScreen> {
               ),
               Expanded(
                 child: GridView.count(
-                  crossAxisCount: 2,
+                  crossAxisCount: 1,
+                  childAspectRatio: (1 / .5),
                   children: [
                     ServiceButton(
                         onTap: (){
@@ -53,22 +55,13 @@ class EmergencyServiceScreenState extends State<EmergencyServiceScreen> {
                     ),
                     ServiceButton(
                       onTap: (){
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => const NearestPoliceStation()
-                        //   ),
-                        // );
-                      }, text: 'Nearest Police Station',
-                    ),
-                    ServiceButton(
-                      onTap: (){}, text: 'Nearest Hospital',
-                    ),
-                    ServiceButton(
-                      onTap: (){}, text: 'Nearest Gas Station',
-                    ),
-                    ServiceButton(
-                      onTap: (){}, text: 'Nearest Gas Station',
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const NearestServiceScreen()
+                          ),
+                        );
+                      }, text: 'Other Services',
                     ),
                   ],
                 ),
