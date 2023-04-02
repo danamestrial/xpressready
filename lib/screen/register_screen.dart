@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:xpressready/components/text_field.dart';
@@ -55,8 +56,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
-        name: nameController;
-        phone: phoneController;
+
+        User? user = FirebaseAuth.instance.currentUser;
+
+        if (user != null) {
+          FirebaseFirestore.instance.collection('users')
+              .doc(user.uid).set({
+            "full_name" : nameController.text,
+            "email" : emailController.text,
+            "phone_number" : phoneController.text,
+            "license_plate" : "",
+            "vehicle_brand" : "",
+            "add_info" : ""
+          });
+        }
+
       } else {
         // Show error that password don't match
         setAlert('Password did not match');
@@ -82,22 +96,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 50),
-
-                  // logo
-                  const Icon(
-                    Icons.minor_crash,
-                    size: 50,
-                  ),
-
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 40),
 
                   // welcome back, you've been missed!
                   Text(
                     'Welcome! Create an account',
                     style: TextStyle(
                       color: Colors.grey[700],
-                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
                     ),
                   ),
 
@@ -164,7 +171,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onTap: signUserIn,
                   ),
 
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 40),
 
                   // or continue with
                   Padding(
@@ -194,7 +201,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
 
                   // google + apple sign in buttons
                   Row(

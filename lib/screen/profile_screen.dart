@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/gauth_service.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -18,6 +20,18 @@ class ProfileScreen extends StatefulWidget {
 
 class ProfileScreenState extends State<ProfileScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
+
+  Future<dynamic> getData() async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        return documentSnapshot.data();
+      }
+    });
+  }
 
   void signUserIn() {
     if (user!.isAnonymous) {
@@ -61,9 +75,9 @@ class ProfileScreenState extends State<ProfileScreen> {
                     child: Text(
                       user!.isAnonymous
                           ? "Guest"
-                          : user!.displayName == null
-                          ? user!.email?.split('@')[0] as String
-                          : user!.displayName as String,
+                          : user!.displayName == ""
+                            ? user!.email?.split('@')[0] as String
+                            : user!.displayName as String,
                       style:
                       const TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
                     ),
@@ -71,144 +85,162 @@ class ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
-            Container(
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 20, top: 30),
-                    child: const Iconify(Zondicons.user_solid_circle, size: 35,),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10, top: 30),
-                    child: const Text('Full Name :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10, top: 30),
-                    child: const Text('Rasika Aramvejanan', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 20, top: 30),
-                    child: const Iconify(Map.post_office, size: 40,),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10, top: 30),
-                    child: const Text('Email :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10, top: 30),
-                    child: Text(user!.email as String, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 20, top: 30),
-                    child: const Icon(Icons.phone_rounded, size: 40,),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10, top: 30),
-                    child: const Text('Phone number :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10, top: 30),
-                    child: const Text('0856123456', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 38, left: 40, ),
-                    child: const Iconify(MaterialSymbols.directions_car_rounded, size: 50,),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 42, left: 10),
-                    child: const Text('Vehicle Details', style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, left: 20),
-                    child: const Iconify(Fa6Regular.address_card, size: 35,),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, left: 10),
-                    child: const Text('License Plate :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, left: 10),
-                    child: const Text('AB1234', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, left: 15),
-                    child: const Iconify(MaterialSymbols.car_crash, size: 40,),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, left: 10),
-                    child: const Text('Vehicle Brand :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, left: 10),
-                    child: const Text('Toyota Ativ', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, left: 15),
-                    child: const Iconify(MaterialSymbols.info, size: 40,),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, left: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(left: 7),
-                          child: const Text('Additional', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+            FutureBuilder(
+              future: getData(),
+              builder: (context, snapshot) {
+                if(snapshot.hasData) {
+                  return Column(
+                    children: [
+                      Container(
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(left: 20, top: 30),
+                              child: const Iconify(Zondicons.user_solid_circle, size: 35,),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10, top: 30),
+                              child: const Text('Full Name :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10, top: 30),
+                              child: Text(snapshot.data['full_name'], style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                            ),
+                          ],
                         ),
-                        Container(
-                          child: const Text('Information', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                      ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(left: 20, top: 30),
+                              child: const Iconify(Map.post_office, size: 40,),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10, top: 30),
+                              child: const Text('Email :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10, top: 30),
+                              child: Text(snapshot.data['email'], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(left: 20, top: 30),
+                              child: const Icon(Icons.phone_rounded, size: 40,),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10, top: 30),
+                              child: const Text('Phone number :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10, top: 30),
+                              child: Text(snapshot.data['phone_number'], style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 38, left: 40, ),
+                              child: const Iconify(MaterialSymbols.directions_car_rounded, size: 50,),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 42, left: 10),
+                              child: const Text('Vehicle Details', style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 30, left: 20),
+                              child: const Iconify(Fa6Regular.address_card, size: 35,),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 30, left: 10),
+                              child: const Text('License Plate :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 30, left: 10),
+                              child: Text(snapshot.data['license_plate'], style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 30, left: 15),
+                              child: const Iconify(MaterialSymbols.car_crash, size: 40,),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 30, left: 10),
+                              child: const Text('Vehicle Brand :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 30, left: 10),
+                              child: Text(snapshot.data['vehicle_brand'], style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 30, left: 15),
+                              child: const Iconify(MaterialSymbols.info, size: 40,),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 30, left: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.only(left: 7),
+                                    child: const Text('Additional', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                                  ),
+                                  Container(
+                                    child: const Text('Information', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 30, left: 5),
+                              child: const Text(':', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 30, left: 10),
+                              child: Text(snapshot.data['add_info'], style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(),
+                    ],
+                  );
+                } else {
+                  return Expanded(
+                    child: Transform.translate(
+                      offset: Offset(0, -50),
+                      child: LoadingAnimationWidget.inkDrop(color: Colors.white, size: 40),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, left: 5),
-                    child: const Text(':', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30, left: 10),
-                    child: const Text('Toyota Ativ', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                  ),
-                ],
-              ),
-            ),
-            Container(),
+                  );
+                }
+              },
+            )
           ],
         ),
       ),
