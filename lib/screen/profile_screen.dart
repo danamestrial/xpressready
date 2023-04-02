@@ -20,6 +20,12 @@ class ProfileScreen extends StatefulWidget {
 
 class ProfileScreenState extends State<ProfileScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
+  final _formKey = GlobalKey<FormState>();
+  final _textController1 = TextEditingController();
+  final _textController2 = TextEditingController();
+  final _textController3 = TextEditingController();
+  final _textController4 = TextEditingController();
+  final _textController5 = TextEditingController();
 
   Future<dynamic> getData() async {
     return await FirebaseFirestore.instance
@@ -136,7 +142,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                             ),
                             Container(
                               margin: const EdgeInsets.only(left: 10, top: 30),
-                              child: const Text('Phone number :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                              child: const Text('Phone Number :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
                             ),
                             Container(
                               margin: const EdgeInsets.only(left: 10, top: 30),
@@ -228,7 +234,248 @@ class ProfileScreenState extends State<ProfileScreen> {
                           ],
                         ),
                       ),
-                      Container(),
+                      Container(
+                        height: 60,
+                        width: 120,
+                        margin: EdgeInsets.only(top: 30),
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: const Color(0xFFAC5757),
+                            foregroundColor: Colors.white,
+                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return SingleChildScrollView(
+                                  child: AlertDialog(
+                                    backgroundColor: const Color(0xFFFBF2CF),
+                                    title: const Text('Edit Personal Information',
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFFAC5757)),
+                                        textAlign: TextAlign.center),
+                                    content: Form(
+                                      key: _formKey,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.only(top: 16),
+                                            child: const Text(
+                                              'Full Name:',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Color(0xFFAC5757),
+                                                  fontWeight: FontWeight.w800),
+                                            ),
+                                          ),
+                                          Container(
+                                            key: _formKey,
+                                            padding: const EdgeInsets.only(top: 8),
+                                            child: TextFormField(
+                                              controller: _textController1,
+                                              maxLength: 15,
+                                              decoration: const InputDecoration(
+                                                labelText: 'Edit Your Name',
+                                                hintText: 'Edit your name here',
+                                              ),
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return snapshot.data['full_name'];
+                                                }
+                                                return null;
+                                              },
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  snapshot.data['full_name'] = value;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(top: 16),
+                                            child: const Text(
+                                              'Phone Number',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Color(0xFFAC5757),
+                                                  fontWeight: FontWeight.w800),
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(top: 8),
+                                            child: TextFormField(
+                                              controller: _textController2,
+                                              maxLength: 10,
+                                              decoration: const InputDecoration(
+                                                labelText: 'Edit Phone Number',
+                                                hintText: 'Edit phone number here',
+                                              ),
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return snapshot.data['phone_number'];
+                                                }
+                                                return value;
+                                              },
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  snapshot.data['phone_number'] = value;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(top: 16),
+                                            child: const Text(
+                                              'License Plate',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Color(0xFFAC5757),
+                                                  fontWeight: FontWeight.w800),
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(top: 8),
+                                            child: TextFormField(
+                                              controller: _textController3,
+                                              decoration: const InputDecoration(
+                                                labelText: 'Edit License Plate',
+                                                hintText: 'Edit license plate here',
+                                              ),
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return snapshot.data['license_plate'];
+                                                }
+                                                return value;
+                                              },
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  snapshot.data['license_plate'] = value;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(top: 16),
+                                            child: const Text(
+                                              'Vehicle Brand',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Color(0xFFAC5757),
+                                                  fontWeight: FontWeight.w800),
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(top: 8),
+                                            child: TextFormField(
+                                              controller: _textController4,
+                                              decoration: const InputDecoration(
+                                                labelText: 'Edit Vehicle Brand',
+                                                hintText: 'Edit vehicle brand here',
+                                              ),
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return snapshot.data['vehicle_brand'];
+                                                }
+                                                return value;
+                                              },
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  snapshot.data['vehicle_brand'] = value;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(top: 16),
+                                            child: const Text(
+                                              'Additional Information',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Color(0xFFAC5757),
+                                                  fontWeight: FontWeight.w800),
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(top: 8),
+                                            child: TextFormField(
+                                              controller: _textController5,
+                                              decoration: const InputDecoration(
+                                                labelText: 'Edit Additional Information',
+                                                hintText: 'Edit additional information here',
+                                              ),
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return snapshot.data['add_info'];
+                                                }
+                                                return value;
+                                              },
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  snapshot.data['add_info'] = value;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      left: 14, top: 20, right: 10),
+                                                  child: TextButton(
+                                                    style: TextButton.styleFrom(
+                                                      backgroundColor: const Color(0xFFAC5757),
+                                                      foregroundColor: Colors.white,
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        snapshot.data;
+                                                      });
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text(
+                                                      'SAVE',
+                                                      style: TextStyle(
+                                                          fontSize: 30,
+                                                          fontWeight: FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin:
+                                                  const EdgeInsets.only(top: 20, left: 10),
+                                                  child: TextButton(
+                                                    style: TextButton.styleFrom(
+                                                      backgroundColor: Colors.grey,
+                                                      foregroundColor: Colors.white,
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text(
+                                                      'CANCEL',
+                                                      style: TextStyle(
+                                                          fontSize: 30,
+                                                          fontWeight: FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            );
+                          },
+                          child: const Text('EDIT', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),),
+                        ),
+                      ),
                     ],
                   );
                 } else {
