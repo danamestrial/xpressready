@@ -139,7 +139,6 @@ class GoogleMapService {
 
   static Future<List<String>> getExpressWays(List<StepMap> steps) async {
     StoreManager storeManagerInstance = StoreManager();
-    List<String>? expressWayList = await storeManagerInstance.expressWayList;
 
     List<String> elementList = steps
       .where((step) => step.html_instructions.contains("Toll"))
@@ -151,6 +150,7 @@ class GoogleMapService {
             .toList();
       })
       .expand((list) => list)
+      .toSet()
       .toList();
 
     print(elementList);

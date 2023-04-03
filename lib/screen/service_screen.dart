@@ -23,7 +23,7 @@ class EmergencyServiceScreenState extends State<EmergencyServiceScreen> {
                 margin: const EdgeInsets.only(top: 40, bottom: 10),
                 child: const Center(
                   child: Text(
-                    "Emergency Services",
+                    "Services",
                     style: TextStyle(fontSize: 35, fontWeight: FontWeight.w800, color: Color(0xFFAC5757)),
                   ),
                 ),

@@ -276,7 +276,7 @@ class _LocationScreenState extends State<LocationScreen> {
             MyPosition originPos = MyPosition(latitude: pos.latitude, longitude: pos.longitude);
             String? stringSteps = await GoogleMapService.getStepsFromLatLng(originPos, destination!);
             List<StepMap> stepList = stepsFromJson(stringSteps);
-            storeManagerInstance.setExpressWayCross(await GoogleMapService.getExpressWays(stepList));
+            storeManagerInstance.setExpressWayCross(GoogleMapService.getExpressWays(stepList));
             print("Success");
           }
         },
