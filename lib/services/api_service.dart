@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xpressready/services/app_service.dart';
 
 class ApiConstants {
-  static const String baseUrl = 'https://exat-man.web.app/api/EXAT_Accident/2566/3';
+  static String baseUrl = 'https://exat-man.web.app/api/EXAT_Accident/2566/${DateTime.now().month}';
   static const String usersEndpoint = '/users';
 }
 
@@ -34,8 +34,6 @@ class ApiService {
       } else {
         print('cache hit');
         DateTime lastDate = DateTime.parse(lastUpdate!);
-
-        await Future.delayed(const Duration(seconds: 5)).then((value) => {});
 
         if (DateTime.now().difference(lastDate).inMinutes > 30) {
           print('outdated date - updating');
