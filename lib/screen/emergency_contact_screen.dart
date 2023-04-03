@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,6 +11,7 @@ class EmergencyContactScreen extends StatefulWidget {
 }
 
 class EmergencyContactScreenState extends State<EmergencyContactScreen> {
+  User? user = FirebaseAuth.instance.currentUser;
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _numberController = TextEditingController();
@@ -33,17 +36,50 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
   }
 
   void _loadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> dataAsString = prefs.getStringList("data") ?? [];
-    setState(() {
-      list_ = dataAsString.map((string) => string.split(",")).toList();
-    });
+    if (user!.isAnonymous) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<String> dataAsString = prefs.getStringList("data") ?? [];
+      setState(() {
+        list_ = dataAsString.map((string) => string.split(",")).toList();
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          print(documentSnapshot.data());
+          list_ = documentSnapshot.get('emergency_contacts');
+          if (list_.isEmpty) {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            List<String> dataAsString = prefs.getStringList("data") ?? [];
+            list_ = dataAsString.map((string) => string.split(",")).toList();
+            if (list_.isNotEmpty) {
+              _saveData();
+            }
+          }
+          setState(() {
+          });
+          return documentSnapshot.data();
+        }
+      });
+    }
   }
 
   void _saveData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> dataAsString = list_.map((list) => list.join(",")).toList();
-    prefs.setStringList("data", dataAsString);
+    if (user!.isAnonymous) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<String> dataAsString = list_.map((list) => list.join(",")).toList();
+      prefs.setStringList("data", dataAsString);
+    } else {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .update({
+        "emergency_contacts" : list_.map((list) => list.join(",")).toList()
+      });
+    }
   }
 
   @override

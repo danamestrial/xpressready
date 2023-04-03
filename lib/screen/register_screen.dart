@@ -67,7 +67,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             "phone_number" : phoneController.text,
             "license_plate" : "",
             "vehicle_brand" : "",
-            "add_info" : ""
+            "add_info" : "",
+            "crash_contacts" : [],
+            "emergency_contacts" : [],
           });
         }
 
