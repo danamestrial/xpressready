@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:xpressready/components/setting_element.dart';
 import 'package:xpressready/screen/login_register_switch.dart';
 import 'package:xpressready/screen/login_screen.dart';
 import 'package:xpressready/services/gauth_service.dart';
 import 'package:xpressready/screen/profile_screen.dart';
+
+import '../components/notify_accident_button.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -19,6 +22,13 @@ class SettingScreenState extends State<SettingScreen> {
   void signUserIn() {
     if (user!.isAnonymous) {
       GAuthService.signOut();
+    }
+  }
+
+  Future<void> _launchPhone(String phone_number) async {
+    Uri url = Uri.parse("tel:$phone_number");
+    if (await canLaunchUrl(url)) {
+      launchUrl(url);
     }
   }
 
@@ -118,9 +128,38 @@ class SettingScreenState extends State<SettingScreen> {
                 },
               ),
 
-              const MySettingElement(
+              MySettingElement(
                 header: "Notify Accident",
-                icon: Icon(Icons.notifications, size: 70, color: Color(0xFFFF00C4),),),
+                icon: const Icon(Icons.notifications, size: 70, color: Color(0xFFFF00C4),),
+                onTap: (){
+                  showDialog(
+                    context: context,
+                    builder: (context){
+                      return AlertDialog(
+                        backgroundColor: const Color(0xFFFBF2CF),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                        title: const Text('Call Emergency Hotline?',
+                            style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFAC5757)),
+                            textAlign: TextAlign.center),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            NotifyAccidentButton(text: 'Emergency Hotline', onTap: (){
+                              _launchPhone("191");
+                            },),
+                            NotifyAccidentButton(text: 'Ambulance', onTap: (){
+                              _launchPhone("+66-1669");
+                            },),
+                          ],
+                        ),
+                      );
+                    });
+                },
+              ),
 
               const Spacer(),
 

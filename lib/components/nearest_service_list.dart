@@ -33,7 +33,7 @@ class NearestServiceList extends StatelessWidget {
               },
               child: Container(
                 margin: const EdgeInsets.only(bottom: 20),
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 width: double.infinity,
                 decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
