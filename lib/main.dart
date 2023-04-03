@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       initialRoute: '/', // we can omit this (as it is by default anyway)
       routes: {
         '/': (context) => const AuthScreen(),

@@ -8,6 +8,7 @@ import 'package:xpressready/services/location_service.dart';
 import 'package:xpressready/services/map_service.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:xpressready/singleton/StoreManager.dart';
 
 import '../model/step_model.dart';
 
@@ -268,13 +269,14 @@ class _LocationScreenState extends State<LocationScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async{
+          StoreManager storeManagerInstance = StoreManager();
           if(destination != null) {
             Navigator.pop(context);
             Position pos = await currentPosition;
             MyPosition originPos = MyPosition(latitude: pos.latitude, longitude: pos.longitude);
             String? stringSteps = await GoogleMapService.getStepsFromLatLng(originPos, destination!);
             List<StepMap> stepList = stepsFromJson(stringSteps);
-            GoogleMapService.getExpressWays(stepList);
+            storeManagerInstance.setExpressWayCross(await GoogleMapService.getExpressWays(stepList));
             print("Success");
           }
         },

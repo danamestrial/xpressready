@@ -3,6 +3,7 @@ import 'package:xpressready/components/list_element.dart';
 import 'package:xpressready/model/accident_model.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:xpressready/screen/choose_location_screen.dart';
 import 'package:xpressready/singleton/StoreManager.dart';
 
 class RecentCrashScreen extends StatefulWidget {
@@ -196,30 +197,14 @@ class RecentCrashScreenState extends State<RecentCrashScreen> {
                 foregroundColor: Colors.white,
               ),
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('My Message'),
-                      content: const Text(
-                        'This is the message that will be displayed in the pop-up.',
-                        style: TextStyle(fontSize: 25),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    );
-                  },
+                StoreManager storeManagerInstance = StoreManager();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LocationScreen())).then(
+                        (value) => print(storeManagerInstance.expressWayCross)
                 );
               },
               child: const Text(
-                'Show Drive Meter',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                'Check ExpressWay',
+                style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
             ),
           ),

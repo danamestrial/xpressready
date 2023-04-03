@@ -146,8 +146,8 @@ class GoogleMapService {
       .map((step) {
         final htmlDoc = parse(step.html_instructions);
         return htmlDoc.getElementsByTagName("b")
-            .map((node) => ltrim(node.text, 'ทางพิเศษ'))
-            .where((text) => expressWayList!.contains(text))
+            .map((node) => node.text)
+            .where((text) => text.contains('ทางพิเศษ'))
             .toList();
       })
       .expand((list) => list)

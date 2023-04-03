@@ -6,6 +6,7 @@ class StoreManager {
   static final StoreManager _instance = StoreManager._internal();
   Future<List<Accident>?>? accidentList;
   Future<List<String>>? expressWayList;
+  List<String>? expressWayCross;
 
   factory StoreManager() {
     return _instance;
@@ -14,6 +15,11 @@ class StoreManager {
   StoreManager._internal() {
     accidentList =  ApiService().getUsers();
     expressWayList = AppService().getExpressWay(accidentList!);
+    expressWayCross = [];
+  }
+
+  void setExpressWayCross(List<String> a) {
+    expressWayCross = a;
   }
 
   // rest of class as normal, for example:
