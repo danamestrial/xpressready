@@ -189,7 +189,7 @@ class _LocationScreenState extends State<LocationScreen> {
                                     builder: (context) => MapScreen(position: snapshot.data!, saveDes: saveDest,)));
                               },
                               child: Container(
-                                margin: const EdgeInsets.only(bottom: 30),
+                                margin: const EdgeInsets.only(bottom: 15),
                                 width: double.infinity,
                                 child: Row(
                                   children: const [
@@ -206,7 +206,7 @@ class _LocationScreenState extends State<LocationScreen> {
                               ),
                             );
                           } else {
-                            return LoadingAnimationWidget.prograssiveDots(
+                            return LoadingAnimationWidget.inkDrop(
                                 color: Colors.black, size: 30
                             );
                           }
@@ -276,7 +276,7 @@ class _LocationScreenState extends State<LocationScreen> {
             MyPosition originPos = MyPosition(latitude: pos.latitude, longitude: pos.longitude);
             String? stringSteps = await GoogleMapService.getStepsFromLatLng(originPos, destination!);
             List<StepMap> stepList = stepsFromJson(stringSteps);
-            storeManagerInstance.setExpressWayCross(GoogleMapService.getExpressWays(stepList));
+            storeManagerInstance.setExpressWayCross(await GoogleMapService.getExpressWays(stepList));
             print("Success");
           }
         },

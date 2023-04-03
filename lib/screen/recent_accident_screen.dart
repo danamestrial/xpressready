@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:xpressready/components/list_element.dart';
 import 'package:xpressready/model/accident_model.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:xpressready/screen/choose_location_screen.dart';
 import 'package:xpressready/singleton/StoreManager.dart';
 
@@ -17,7 +16,7 @@ class RecentCrashScreenState extends State<RecentCrashScreen> {
   StoreManager storeManagerInstance = StoreManager();
   Future<List<Accident>?>? _accidentModel;
   String? selectedValue;
-  Future<List<String>>? _expressWay;
+  List<String> _expressWay = [];
   final TextEditingController textEditingController = TextEditingController();
 
   @override
@@ -28,8 +27,8 @@ class RecentCrashScreenState extends State<RecentCrashScreen> {
 
   @override
   void initState() {
-    super.initState();
     _accidentModel = storeManagerInstance.accidentList;
+    super.initState();
   }
 
   @override
@@ -99,34 +98,24 @@ class RecentCrashScreenState extends State<RecentCrashScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    FutureBuilder(
-                      future: _expressWay,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          print(snapshot.data);
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              return Text(
-                                snapshot.data![index],
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              );
-                            },
-                          );
-                        } else {
-                          return Text("");
-                        }
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _expressWay.length,
+                      itemBuilder: (context, index) {
+                        return Text(
+                          _expressWay[index],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
                       },
                     ),
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 300,
                 child: TextButton(
                   style: TextButton.styleFrom(
@@ -134,7 +123,7 @@ class RecentCrashScreenState extends State<RecentCrashScreen> {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LocationScreen())).then((value) {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LocationScreen())).then((value) async {
                       setState(() {
                         _expressWay = storeManagerInstance.expressWayCross;
                       });
