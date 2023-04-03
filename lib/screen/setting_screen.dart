@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:xpressready/components/setting_element.dart';
-import 'package:xpressready/screen/login_register_switch.dart';
-import 'package:xpressready/screen/login_screen.dart';
 import 'package:xpressready/services/gauth_service.dart';
 import 'package:xpressready/screen/profile_screen.dart';
 
@@ -21,7 +19,7 @@ class SettingScreenState extends State<SettingScreen> {
 
   void signUserIn() {
     if (user!.isAnonymous) {
-      GAuthService.signOut();
+      user!.delete();
     }
   }
 
@@ -110,12 +108,7 @@ class SettingScreenState extends State<SettingScreen> {
                 icon: const Icon(Icons.account_box_rounded, size: 70, color: Color(0xFFC55CF1),),
                 onTap: () {
                   if (user!.isAnonymous) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginRegisterScreen()
-                      ),
-                    );
+                    signUserIn();
                   }
                   else {
                     Navigator.push(

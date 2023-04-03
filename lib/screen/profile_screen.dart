@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../services/gauth_service.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/fa6_regular.dart';
@@ -34,7 +33,6 @@ class ProfileScreenState extends State<ProfileScreen> {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        print(documentSnapshot.data());
         _textController1.text = documentSnapshot.get('full_name');
         _textController2.text = documentSnapshot.get('phone_number');
         _textController3.text = documentSnapshot.get('license_plate');
@@ -43,14 +41,6 @@ class ProfileScreenState extends State<ProfileScreen> {
         return documentSnapshot.data();
       }
     });
-  }
-
-  void updateTextController(dynamic documentSnapshot) {
-    _textController1.text = documentSnapshot.get('name');
-    // _textController2.text = documentSnapshot.data()['phone_number'];
-    _textController3.text = documentSnapshot.get('license_plate');
-    // _textController4.text = documentSnapshot.data()['vehicle_brand'];
-    // _textController5.text = documentSnapshot.data()['add_info'];
   }
 
   Future<dynamic> updateData() async {
@@ -80,44 +70,42 @@ class ProfileScreenState extends State<ProfileScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              child: Row(
-                children: [
-                  Container(
-                    margin:
-                    const EdgeInsets.only(top: 20, bottom: 10, left: 5),
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(
-                        Icons.arrow_back,
-                        size: 45,
-                        color: Color(0xFFAC5757),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 10),
+            Row(
+              children: [
+                Container(
+                  margin:
+                  const EdgeInsets.only(top: 20, bottom: 10, left: 5),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     child: const Icon(
-                      Icons.person,
-                      size: 90,
+                      Icons.arrow_back,
+                      size: 45,
+                      color: Color(0xFFAC5757),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 10, left: 8),
-                    child: Text(
-                      user!.isAnonymous
-                          ? "Guest"
-                          : user!.displayName == "" || user!.displayName==null
-                            ? user!.email?.split('@')[0] as String
-                            : user!.displayName as String,
-                      style:
-                      const TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
-                    ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  child: const Icon(
+                    Icons.person,
+                    size: 90,
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, left: 8),
+                  child: Text(
+                    user!.isAnonymous
+                        ? "Guest"
+                        : user!.displayName == "" || user!.displayName==null
+                          ? user!.email?.split('@')[0] as String
+                          : user!.displayName as String,
+                    style:
+                    const TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
+                  ),
+                ),
+              ],
             ),
             FutureBuilder(
               future: getData(),
@@ -125,147 +113,131 @@ class ProfileScreenState extends State<ProfileScreen> {
                 if(snapshot.hasData) {
                   return Column(
                     children: [
-                      Container(
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 20, top: 30),
-                              child: const Iconify(Zondicons.user_solid_circle, size: 35,),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 10, top: 30),
-                              child: const Text('Full Name :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 10, top: 30),
-                              child: Text(snapshot.data['full_name'], style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                            ),
-                          ],
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 20, top: 30),
+                            child: const Iconify(Zondicons.user_solid_circle, size: 35,),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 10, top: 30),
+                            child: const Text('Full Name :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 10, top: 30),
+                            child: Text(snapshot.data['full_name'], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                          ),
+                        ],
                       ),
-                      Container(
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 20, top: 30),
-                              child: const Iconify(Map.post_office, size: 40,),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 10, top: 30),
-                              child: const Text('Email :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 10, top: 30),
-                              child: Text(snapshot.data['email'], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                            ),
-                          ],
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 20, top: 30),
+                            child: const Iconify(Map.post_office, size: 40,),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 10, top: 30),
+                            child: const Text('Email :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 10, top: 30),
+                            child: Text(snapshot.data['email'], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                          ),
+                        ],
                       ),
-                      Container(
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 20, top: 30),
-                              child: const Icon(Icons.phone_rounded, size: 40,),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 10, top: 30),
-                              child: const Text('Phone Number :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 10, top: 30),
-                              child: Text(snapshot.data['phone_number'], style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                            ),
-                          ],
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 20, top: 30),
+                            child: const Icon(Icons.phone_rounded, size: 40,),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 10, top: 30),
+                            child: const Text('Phone Number :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 10, top: 30),
+                            child: Text(snapshot.data['phone_number'], style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                          ),
+                        ],
                       ),
-                      Container(
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 38, left: 40, ),
-                              child: const Iconify(MaterialSymbols.directions_car_rounded, size: 50,),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 42, left: 10),
-                              child: const Text('Vehicle Details', style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),),
-                            ),
-                          ],
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 38, left: 40, ),
+                            child: const Iconify(MaterialSymbols.directions_car_rounded, size: 50,),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 42, left: 10),
+                            child: const Text('Vehicle Details', style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),),
+                          ),
+                        ],
                       ),
-                      Container(
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 30, left: 20),
-                              child: const Iconify(Fa6Regular.address_card, size: 35,),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 30, left: 10),
-                              child: const Text('License Plate :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 30, left: 10),
-                              child: Text(snapshot.data['license_plate'], style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                            ),
-                          ],
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 30, left: 20),
+                            child: const Iconify(Fa6Regular.address_card, size: 35,),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 30, left: 10),
+                            child: const Text('License Plate :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 30, left: 10),
+                            child: Text(snapshot.data['license_plate'], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                          ),
+                        ],
                       ),
-                      Container(
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 30, left: 15),
-                              child: const Iconify(MaterialSymbols.car_crash, size: 40,),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 30, left: 10),
-                              child: const Text('Vehicle Brand :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 30, left: 10),
-                              child: Text(snapshot.data['vehicle_brand'], style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                            ),
-                          ],
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 30, left: 15),
+                            child: const Iconify(MaterialSymbols.car_crash, size: 40,),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 30, left: 10),
+                            child: const Text('Vehicle Brand :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 30, left: 10),
+                            child: Text(snapshot.data['vehicle_brand'], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                          ),
+                        ],
                       ),
-                      Container(
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 30, left: 15),
-                              child: const Iconify(MaterialSymbols.info, size: 40,),
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 30, left: 15),
+                            child: const Iconify(MaterialSymbols.info, size: 40,),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 30, left: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.only(left: 7),
+                                  child: const Text('Additional', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                                ),
+                                const Text('Information', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                              ],
                             ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 30, left: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.only(left: 7),
-                                    child: const Text('Additional', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                                  ),
-                                  Container(
-                                    child: const Text('Information', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 30, left: 5),
-                              child: const Text(':', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 30, left: 10),
-                              child: Text(snapshot.data['add_info'], style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
-                            ),
-                          ],
-                        ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 30, left: 5),
+                            child: const Text(':', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 30, left: 10),
+                            child: Text(snapshot.data['add_info'], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
+                          ),
+                        ],
                       ),
                       Container(
                         height: 60,
                         width: 120,
-                        margin: EdgeInsets.only(top: 30),
+                        margin: const EdgeInsets.only(top: 30),
                         child: TextButton(
                           style: TextButton.styleFrom(
                             backgroundColor: const Color(0xFFAC5757),
@@ -435,51 +407,49 @@ class ProfileScreenState extends State<ProfileScreen> {
                                               },
                                             ),
                                           ),
-                                          Container(
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 14, top: 20, right: 10),
-                                                  child: TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      backgroundColor: const Color(0xFFAC5757),
-                                                      foregroundColor: Colors.white,
-                                                    ),
-                                                    onPressed: () {
-                                                      updateData().then((value) => Navigator.pop(context));
-                                                      setState(() {
-                                                      });
-                                                    },
-                                                    child: const Text(
-                                                      'SAVE',
-                                                      style: TextStyle(
-                                                          fontSize: 30,
-                                                          fontWeight: FontWeight.bold),
-                                                    ),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    left: 14, top: 20, right: 10),
+                                                child: TextButton(
+                                                  style: TextButton.styleFrom(
+                                                    backgroundColor: const Color(0xFFAC5757),
+                                                    foregroundColor: Colors.white,
+                                                  ),
+                                                  onPressed: () {
+                                                    updateData().then((value) => Navigator.pop(context));
+                                                    setState(() {
+                                                    });
+                                                  },
+                                                  child: const Text(
+                                                    'SAVE',
+                                                    style: TextStyle(
+                                                        fontSize: 30,
+                                                        fontWeight: FontWeight.bold),
                                                   ),
                                                 ),
-                                                Container(
-                                                  margin:
-                                                  const EdgeInsets.only(top: 20, left: 10),
-                                                  child: TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      backgroundColor: Colors.grey,
-                                                      foregroundColor: Colors.white,
-                                                    ),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text(
-                                                      'CANCEL',
-                                                      style: TextStyle(
-                                                          fontSize: 30,
-                                                          fontWeight: FontWeight.bold),
-                                                    ),
+                                              ),
+                                              Container(
+                                                margin:
+                                                const EdgeInsets.only(top: 20, left: 10),
+                                                child: TextButton(
+                                                  style: TextButton.styleFrom(
+                                                    backgroundColor: Colors.grey,
+                                                    foregroundColor: Colors.white,
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text(
+                                                    'CANCEL',
+                                                    style: TextStyle(
+                                                        fontSize: 30,
+                                                        fontWeight: FontWeight.bold),
                                                   ),
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -497,7 +467,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 } else {
                   return Expanded(
                     child: Transform.translate(
-                      offset: Offset(0, -50),
+                      offset: const Offset(0, -50),
                       child: LoadingAnimationWidget.inkDrop(color: Colors.white, size: 40),
                     ),
                   );
