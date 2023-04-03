@@ -17,7 +17,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
   final _numberController = TextEditingController();
   String? name;
   String? number;
-  List<List<String>> list_ = [];
+  List<List<String>> _list = [];
 
   @override
   void dispose() {
@@ -27,7 +27,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
   }
 
   void _addContact() {
-    list_.add([
+    _list.add([
       _nameController.text,
       _numberController.text,
     ]);
@@ -40,7 +40,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       List<String> dataAsString = prefs.getStringList("data") ?? [];
       setState(() {
-        list_ = dataAsString.map((string) => string.split(",")).toList();
+        _list = dataAsString.map((string) => string.split(",")).toList();
       });
     } else {
       await FirebaseFirestore.instance
@@ -49,13 +49,12 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
           .get()
           .then((DocumentSnapshot documentSnapshot) async {
         if (documentSnapshot.exists) {
-          print(documentSnapshot.data());
-          list_ = documentSnapshot.get('emergency_contacts');
-          if (list_.isEmpty) {
+          _list = List.from(documentSnapshot.get('emergency_contacts')).map((e) => (e as String).split(",")).toList();
+          if (_list.isEmpty) {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             List<String> dataAsString = prefs.getStringList("data") ?? [];
-            list_ = dataAsString.map((string) => string.split(",")).toList();
-            if (list_.isNotEmpty) {
+            _list = dataAsString.map((string) => string.split(",")).toList();
+            if (_list.isNotEmpty) {
               _saveData();
             }
           }
@@ -70,14 +69,14 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
   void _saveData() async {
     if (user!.isAnonymous) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      List<String> dataAsString = list_.map((list) => list.join(",")).toList();
+      List<String> dataAsString = _list.map((list) => list.join(",")).toList();
       prefs.setStringList("data", dataAsString);
     } else {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user!.uid)
           .update({
-        "emergency_contacts" : list_.map((list) => list.join(",")).toList()
+        "emergency_contacts" : _list.map((list) => list.join(",")).toList()
       });
     }
   }
@@ -86,7 +85,6 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
   void initState() {
     super.initState();
     _loadData();
-    _saveData();
   }
 
   @override
@@ -126,7 +124,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: list_.length,
+                itemCount: _list.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                     height: 120,
@@ -161,7 +159,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                               Container(
                                 padding: const EdgeInsets.only(top: 30, left: 28),
                                 child: Text(
-                                  list_[index][0],
+                                  _list[index][0],
                                   style: const TextStyle(
                                       fontSize: 25,
                                       color: Colors.black,
@@ -172,7 +170,7 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                               Container(
                                 padding: const EdgeInsets.only(top: 5, left: 28, right: 65),
                                 child: Text(
-                                  list_[index][1],
+                                  _list[index][1],
                                   style: const TextStyle(
                                       fontSize: 25,
                                       color: Colors.black,
@@ -186,9 +184,10 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                         Container(
                             // margin: const EdgeInsets.only(),
                             child: FloatingActionButton(
+                              heroTag: "btn1",
                               onPressed: () {
                                 setState(() {
-                                  list_.removeAt(index);
+                                  _list.removeAt(index);
                                   _saveData();
                                 });
                               },
@@ -235,7 +234,6 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                             ),
                           ),
                           Container(
-                            key: _formKey,
                             padding: const EdgeInsets.only(top: 8),
                             child: TextFormField(
                               controller: _nameController,

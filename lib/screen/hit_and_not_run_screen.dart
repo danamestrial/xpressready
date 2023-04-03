@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,6 +14,7 @@ class HitAndNotRunScreen extends StatefulWidget {
 }
 
 class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
+  User? user = FirebaseAuth.instance.currentUser;
   final _formKey = GlobalKey<FormState>();
   final _textController1 = TextEditingController();
   final _textController2 = TextEditingController();
@@ -43,25 +46,56 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
     _textController3.clear();
   }
 
-  void _loadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> dataAsString = prefs.getStringList("data1") ?? [];
-    setState(() {
-      _list = dataAsString.map((string) => string.split(",")).toList();
-    });
+  Future<void> _loadData() async {
+    if (user!.isAnonymous) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<String> dataAsString = prefs.getStringList("data1") ?? [];
+      setState(() {
+        _list = dataAsString.map((string) => string.split(",")).toList();
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) async {
+        if (documentSnapshot.exists) {
+          _list = List.from(documentSnapshot.get('crash_contacts')).map((e) => (e as String).split(",")).toList();
+          if (_list.isEmpty) {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            List<String> dataAsString = prefs.getStringList("data1") ?? [];
+            _list = dataAsString.map((string) => string.split(",")).toList();
+            if (_list.isNotEmpty) {
+              _saveData();
+            }
+          }
+          setState(() {
+          });
+          return documentSnapshot.data();
+        }
+      });
+    }
   }
 
   void _saveData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> dataAsString = _list.map((list) => list.join(",")).toList();
-    prefs.setStringList("data1", dataAsString);
+    if (user!.isAnonymous) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<String> dataAsString = _list.map((list) => list.join(",")).toList();
+      prefs.setStringList("data1", dataAsString);
+    } else {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .update({
+        "crash_contacts" : _list.map((list) => list.join(",")).toList()
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
     _loadData();
-    _saveData();
   }
 
   @override
@@ -194,6 +228,7 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: "btn2",
         onPressed: () {
           showDialog(
               context: context,
@@ -271,7 +306,6 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                             ),
                           ),
                           Container(
-                            key: _formKey,
                             padding: const EdgeInsets.only(top: 8),
                             child: TextFormField(
                               controller: _textController1,
