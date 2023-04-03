@@ -209,13 +209,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // google button
-                      SquareTile(
-                        onTap: () => GAuthService().signInWithGoogle(context),
-                        imagePath: 'lib/images/google.png',
-                      ),
-
-                      const SizedBox(width: 30,),
+                      // // google button
+                      // SquareTile(
+                      //   onTap: () => GAuthService().signInWithGoogle(context),
+                      //   imagePath: 'lib/images/google.png',
+                      // ),
+                      //
+                      // const SizedBox(width: 30,),
 
                       SquareTile(
                         onTap: () => GAuthService.signInAnonymous(context),

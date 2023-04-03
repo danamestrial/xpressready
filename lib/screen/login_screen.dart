@@ -169,19 +169,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
 
                 // google + apple sign in buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // google button
-                    SquareTile(
-                      onTap: () => GAuthService().signInWithGoogle(context),
-                      imagePath: 'lib/images/google.png',
-                    ),
-
-                    const SizedBox(width: 30,),
+                    // // google button
+                    // SquareTile(
+                    //   onTap: () => GAuthService().signInWithGoogle(context),
+                    //   imagePath: 'lib/images/google.png',
+                    // ),
+                    //
+                    // const SizedBox(width: 30,),
 
                     SquareTile(
                       onTap: () => GAuthService.signInAnonymous(context),
