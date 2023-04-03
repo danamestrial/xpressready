@@ -34,9 +34,23 @@ class ProfileScreenState extends State<ProfileScreen> {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
+        print(documentSnapshot.data());
+        _textController1.text = documentSnapshot.get('full_name');
+        _textController2.text = documentSnapshot.get('phone_number');
+        _textController3.text = documentSnapshot.get('license_plate');
+        _textController4.text = documentSnapshot.get('vehicle_brand');
+        _textController5.text = documentSnapshot.get('add_info');
         return documentSnapshot.data();
       }
     });
+  }
+
+  void updateTextController(dynamic documentSnapshot) {
+    _textController1.text = documentSnapshot.get('name');
+    // _textController2.text = documentSnapshot.data()['phone_number'];
+    _textController3.text = documentSnapshot.get('license_plate');
+    // _textController4.text = documentSnapshot.data()['vehicle_brand'];
+    // _textController5.text = documentSnapshot.data()['add_info'];
   }
 
   Future<dynamic> updateData() async {
@@ -61,6 +75,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFFBF2CF),
       body: SafeArea(
         child: Column(
@@ -260,16 +275,16 @@ class ProfileScreenState extends State<ProfileScreen> {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return SingleChildScrollView(
-                                  child: AlertDialog(
-                                    backgroundColor: const Color(0xFFFBF2CF),
-                                    title: const Text('Edit Personal Information',
-                                        style: TextStyle(
-                                            fontSize: 30,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFFAC5757)),
-                                        textAlign: TextAlign.center),
-                                    content: Form(
+                                return AlertDialog(
+                                  backgroundColor: const Color(0xFFFBF2CF),
+                                  title: const Text('Edit Personal Information',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFFAC5757)),
+                                      textAlign: TextAlign.center),
+                                  content: SingleChildScrollView(
+                                    child: Form(
                                       key: _formKey,
                                       child: Column(
                                         children: [
@@ -284,7 +299,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           ),
                                           Container(
-                                            key: _formKey,
                                             padding: const EdgeInsets.only(top: 8),
                                             child: TextFormField(
                                               controller: _textController1,
@@ -300,9 +314,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                 return null;
                                               },
                                               onChanged: (value) {
-                                                setState(() {
-                                                  snapshot.data['full_name'] = value;
-                                                });
+                                                snapshot.data['full_name'] = value;
                                               },
                                             ),
                                           ),
@@ -332,9 +344,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                 return value;
                                               },
                                               onChanged: (value) {
-                                                setState(() {
-                                                  snapshot.data['phone_number'] = value;
-                                                });
+                                                snapshot.data['phone_number'] = value;
                                               },
                                             ),
                                           ),
@@ -363,9 +373,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                 return value;
                                               },
                                               onChanged: (value) {
-                                                setState(() {
-                                                  snapshot.data['license_plate'] = value;
-                                                });
+                                                snapshot.data['license_plate'] = value;
                                               },
                                             ),
                                           ),
@@ -394,9 +402,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                 return value;
                                               },
                                               onChanged: (value) {
-                                                setState(() {
-                                                  snapshot.data['vehicle_brand'] = value;
-                                                });
+                                                snapshot.data['vehicle_brand'] = value;
                                               },
                                             ),
                                           ),
@@ -425,9 +431,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                 return value;
                                               },
                                               onChanged: (value) {
-                                                setState(() {
-                                                  snapshot.data['add_info'] = value;
-                                                });
+                                                snapshot.data['add_info'] = value;
                                               },
                                             ),
                                           ),
@@ -480,7 +484,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                         ],
                                       ),
                                     ),
-                                  ),
+                                  )
                                 );
                               }
                             );
