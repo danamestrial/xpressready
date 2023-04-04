@@ -235,7 +235,7 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
               context: context,
               builder: (BuildContext context) {
                 return StatefulBuilder(
-                  builder: (context, setState) {
+                  builder: (context, setStateDialog) {
                     return SingleChildScrollView(
                       child: AlertDialog(
                         backgroundColor: const Color(0xFFFBF2CF),
@@ -286,7 +286,7 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                                       .toList(),
                                   value: hit,
                                   onChanged: (value) {
-                                    setState(() {
+                                    setStateDialog(() {
                                       hit = value as String;
                                     });
                                   },
@@ -402,8 +402,8 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                                         foregroundColor: Colors.white,
                                       ),
                                       onPressed: () {
+                                        _addContact();
                                         setState(() {
-                                          _addContact();
                                         });
                                         _saveData();
                                         Navigator.pop(context);
