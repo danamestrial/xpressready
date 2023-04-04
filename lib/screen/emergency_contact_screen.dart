@@ -94,33 +94,31 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              child: Row(
-                children: [
-                  Container(
-                      margin: const EdgeInsets.only(top: 20, bottom: 10, left: 5),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Icon(
-                          Icons.arrow_back,
-                          size: 45,
-                          color: Color(0xFFAC5757),
-                        ),
-                      )),
-                  Container(
-                    margin: const EdgeInsets.only(top: 20, bottom: 10),
-                    child: const Text(
-                      "Emergency Contacts",
-                      style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xFFAC5757)),
-                    ),
+            Row(
+              children: [
+                Container(
+                    margin: const EdgeInsets.only(top: 20, bottom: 10, left: 5),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(
+                        Icons.arrow_back,
+                        size: 45,
+                        color: Color(0xFFAC5757),
+                      ),
+                    )),
+                Container(
+                  margin: const EdgeInsets.only(top: 20, bottom: 10),
+                  child: const Text(
+                    "Emergency Contacts",
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFFAC5757)),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Expanded(
               child: ListView.builder(
@@ -146,43 +144,42 @@ class EmergencyContactScreenState extends State<EmergencyContactScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Container(
-                          child: const Icon(
-                            Icons.phone_outlined,
-                            size: 45,
-                          ),
+                        const Icon(
+                          Icons.phone_outlined,
+                          size: 45,
                         ),
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(top: 30, left: 28),
-                                child: Text(
-                                  _list[index][0],
-                                  style: const TextStyle(
-                                      fontSize: 25,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700),
-                                  textAlign: TextAlign.left,
-                                ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(top: 30, left: 28),
+                              child: Text(
+                                _list[index][0],
+                                style: const TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700),
+                                textAlign: TextAlign.left,
                               ),
-                              Container(
-                                padding: const EdgeInsets.only(top: 5, left: 28, right: 65),
-                                child: Text(
-                                  _list[index][1],
-                                  style: const TextStyle(
-                                      fontSize: 25,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700),
-                                  textAlign: TextAlign.left,
-                                ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.only(top: 5, left: 28, right: 65),
+                              child: Text(
+                                _list[index][1],
+                                style: const TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700),
+                                textAlign: TextAlign.left,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
+
+                        const Spacer(),
+
                         Container(
-                            // margin: const EdgeInsets.only(),
+                            margin: const EdgeInsets.only(right: 20),
                             child: FloatingActionButton(
                               heroTag: "btn1",
                               onPressed: () {
