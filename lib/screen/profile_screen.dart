@@ -205,31 +205,22 @@ class ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      Row(
+                      Column(
                         children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 30, left: 15),
-                            child: const Iconify(MaterialSymbols.info, size: 40,),
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(top: 30, left: 15),
+                                child: const Iconify(MaterialSymbols.info, size: 40,),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 30, left: 10),
+                                child: const Text('Addition Information :', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                              ),
+                            ],
                           ),
                           Container(
-                            margin: const EdgeInsets.only(top: 30, left: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.only(left: 7),
-                                  child: const Text('Additional', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                                ),
-                                const Text('Information', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 30, left: 5),
-                            child: const Text(':', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 30, left: 10),
+                            margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
                             child: Text(snapshot.data['add_info'], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0xFFAC5757)),),
                           ),
                         ],
@@ -237,7 +228,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         height: 60,
                         width: 120,
-                        margin: const EdgeInsets.only(top: 30),
+                        margin: const EdgeInsets.only(top: 20),
                         child: TextButton(
                           style: TextButton.styleFrom(
                             backgroundColor: const Color(0xFFAC5757),
