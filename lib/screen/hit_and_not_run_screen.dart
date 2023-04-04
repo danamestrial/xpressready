@@ -206,12 +206,13 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
                             ),
                           ],
                         ),
+                        Spacer(),
                         Container(
-                            margin: const EdgeInsets.only(left: 23),
+                            margin: const EdgeInsets.only(right: 20),
                             child: FloatingActionButton(
                               onPressed: () {
+                                _list.removeAt(index);
                                 setState(() {
-                                  _list.removeAt(index);
                                   _saveData();
                                 });
                               },
@@ -233,211 +234,215 @@ class HitAndNotRunScreenState extends State<HitAndNotRunScreen> {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return SingleChildScrollView(
-                  child: AlertDialog(
-                    backgroundColor: const Color(0xFFFBF2CF),
-                    title: const Text('Enter Contact Details',
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFAC5757)),
-                        textAlign: TextAlign.center),
-                    content: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: const Text(
-                              'Are you being hit or did you hit someone ?',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Color(0xFFAC5757),
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Container(
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton2(
-                                hint: const Text(
-                                  'Select Item',
+                return StatefulBuilder(
+                  builder: (context, setState) {
+                    return SingleChildScrollView(
+                      child: AlertDialog(
+                        backgroundColor: const Color(0xFFFBF2CF),
+                        title: const Text('Enter Contact Details',
+                            style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFAC5757)),
+                            textAlign: TextAlign.center),
+                        content: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: const Text(
+                                  'Are you being hit or did you hit someone ?',
                                   style: TextStyle(
-                                      fontSize: 15,
+                                      fontSize: 18,
                                       color: Color(0xFFAC5757),
-                                      fontWeight: FontWeight.w700),
+                                      fontWeight: FontWeight.w800),
                                 ),
-                                items: items
-                                    .map(
-                                      (item) => DropdownMenuItem<String>(
-                                        value: item,
+                              ),
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2(
+                                  hint: const Text(
+                                    'Select Item',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Color(0xFFAC5757),
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  items: items
+                                      .map(
+                                        (item) => DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Center(
                                         child: Text(
                                           item,
                                           style: const TextStyle(
-                                              fontSize: 15,
-                                              color: Color(0xFFAC5757),
+                                              fontSize: 20,
+                                              color: Colors.black,
                                               fontWeight: FontWeight.w700),
                                         ),
+                                      )
+                                    ),
+                                  )
+                                      .toList(),
+                                  value: hit,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      hit = value as String;
+                                    });
+                                  },
+                                  buttonStyleData: const ButtonStyleData(
+                                    height: 60,
+                                    width: 200,
+                                  ),
+                                  menuItemStyleData:
+                                  const MenuItemStyleData(height: 40),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: const Text(
+                                  'Name:',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Color(0xFFAC5757),
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: TextFormField(
+                                  controller: _textController1,
+                                  maxLength: 15,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter Your Name',
+                                    hintText: 'Enter your name here',
+                                  ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your name';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    setState(() {
+                                      name = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: const Text('Car Plate:',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: Color(0xFFAC5757),
+                                        fontWeight: FontWeight.w800)),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: TextFormField(
+                                  controller: _textController2,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter Your Car Plate',
+                                    hintText: 'Enter your car plate here',
+                                  ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your car plate';
+                                    }
+                                    return value;
+                                  },
+                                  onChanged: (value) {
+                                    setState(() {
+                                      plate = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: const Text(
+                                  'Contact number',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Color(0xFFAC5757),
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: TextFormField(
+                                  controller: _textController3,
+                                  maxLength: 10,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter Contact Number',
+                                    hintText: 'Enter contact number here',
+                                  ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter contact number';
+                                    }
+                                    return value;
+                                  },
+                                  onChanged: (value) {
+                                    setState(() {
+                                      number = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 14, top: 20, right: 10),
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: const Color(0xFFAC5757),
+                                        foregroundColor: Colors.white,
                                       ),
-                                    )
-                                    .toList(),
-                                value: hit,
-                                onChanged: (value) {
-                                  setState(() {
-                                    hit = value as String;
-                                  });
-                                },
-                                buttonStyleData: const ButtonStyleData(
-                                  height: 40,
-                                  width: 140,
-                                ),
-                                menuItemStyleData:
-                                    const MenuItemStyleData(height: 40),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: const Text(
-                              'Name:',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Color(0xFFAC5757),
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: TextFormField(
-                              controller: _textController1,
-                              maxLength: 15,
-                              decoration: const InputDecoration(
-                                labelText: 'Enter Your Name',
-                                hintText: 'Enter your name here',
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your name';
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                setState(() {
-                                  name = value;
-                                });
-                              },
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: const Text('Car Plate:',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Color(0xFFAC5757),
-                                    fontWeight: FontWeight.w800)),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: TextFormField(
-                              controller: _textController2,
-                              decoration: const InputDecoration(
-                                labelText: 'Enter Your Car Plate',
-                                hintText: 'Enter your car plate here',
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your car plate';
-                                }
-                                return value;
-                              },
-                              onChanged: (value) {
-                                setState(() {
-                                  plate = value;
-                                });
-                              },
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: const Text(
-                              'Contact number',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Color(0xFFAC5757),
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: TextFormField(
-                              controller: _textController3,
-                              maxLength: 10,
-                              decoration: const InputDecoration(
-                                labelText: 'Enter Contact Number',
-                                hintText: 'Enter contact number here',
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter contact number';
-                                }
-                                return value;
-                              },
-                              onChanged: (value) {
-                                setState(() {
-                                  number = value;
-                                });
-                              },
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(
-                                    left: 14, top: 20, right: 10),
-                                child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: const Color(0xFFAC5757),
-                                    foregroundColor: Colors.white,
+                                      onPressed: () {
+                                        setState(() {
+                                          _addContact();
+                                        });
+                                        _saveData();
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text(
+                                        'SAVE',
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                   ),
-                                  onPressed: () {
-                                      setState(() {
-                                        _addContact();
-                                      });
-                                      _saveData();
-                                      Navigator.pop(context);
-                                  },
-                                  child: const Text(
-                                    'SAVE',
-                                    style: TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin:
+                                  Container(
+                                    margin:
                                     const EdgeInsets.only(top: 20, left: 10),
-                                child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Colors.grey,
-                                    foregroundColor: Colors.white,
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Colors.grey,
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text(
+                                        'CANCEL',
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                   ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text(
-                                    'CANCEL',
-                                    style: TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 );
               });
         },
